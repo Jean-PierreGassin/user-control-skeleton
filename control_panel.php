@@ -42,6 +42,16 @@ require_once('php_scripts/loader.php');
         </div>
       </div>
     </div>  
+    <?php else: ?>
+    <div class="row">
+      <div class="large-12 columns">
+        <div>
+          <div class="large-12 large-centered text-center columns">
+            <div class="alert-box alert">ERROR: Unauthorized!</div>
+          </div>
+        </div>
+      </div>
+    </div>
     <?php endif; ?>
     <?php endif; ?> 
 
