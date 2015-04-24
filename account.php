@@ -22,12 +22,8 @@ require_once('php_scripts/loader.php');
     <?php else: ?>
     <div class="row">
       <div class="large-12 columns">
-        <div>
-          <div>
-            <div class="large-12 large-centered text-center columns">
-              <div class="alert-box warning">You are not logged in.</div>
-            </div>
-          </div>
+        <div class="large-12 large-centered text-center columns">
+          <div class="alert-box warning">You are not logged in.</div>
         </div>
       </div>
     </div>

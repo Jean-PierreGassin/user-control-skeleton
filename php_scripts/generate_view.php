@@ -10,13 +10,9 @@ class generate_view
 				echo '
 				<div class="row">
 					<div class="large-12 columns">
-					  <div>
-					    <div>
-					      <div class="large-12 large-centered text-center columns">
-					        <div class="alert-box alert">ERROR: Unauthorized!</div>
-					      </div>
-					    </div>
-					  </div>
+				      <div class="large-12 large-centered text-center columns">
+				        <div class="alert-box alert">ERROR: Unauthorized!</div>
+				      </div>
 					</div>
 				</div>
 		        ';
@@ -26,13 +22,9 @@ class generate_view
 				echo '
 				<div class="row">
 					<div class="large-12 columns">
-					  <div>
-					    <div>
-					      <div class="large-4 large-centered text-center columns">
-					        <div class="alert-box alert">Incorrect Password!</div>
-					      </div>
-					    </div>
-					  </div>
+				      <div class="large-4 large-centered text-center columns">
+				        <div class="alert-box alert">Incorrect Password!</div>
+				      </div>
 					</div>
 				</div>
 		        ';
@@ -42,13 +34,9 @@ class generate_view
 				echo '
 				<div class="row">
 					<div class="large-12 columns">
-					  <div>
-					    <div>
-					      <div class="large-4 large-centered text-center columns">
-					        <div class="alert-box alert">Passwords do not match.</div>
-					      </div>
-					    </div>
-					  </div>
+				      <div class="large-4 large-centered text-center columns">
+				        <div class="alert-box alert">Passwords do not match.</div>
+				      </div>
 					</div>
 				</div>
 		        ';
@@ -58,13 +46,9 @@ class generate_view
 				echo '
 				<div class="row">
 					<div class="large-12 columns">
-					  <div>
-					    <div>
-					      <div class="large-4 large-centered text-center columns">
-					        <div class="alert-box alert">Username already exists.</div>
-					      </div>
-					    </div>
-					  </div>
+				      <div class="large-4 large-centered text-center columns">
+				        <div class="alert-box alert">Username already exists.</div>
+				      </div>
 					</div>
 				</div>
 		        ';
@@ -74,13 +58,9 @@ class generate_view
 				echo '
 				<div class="row">
 					<div class="large-12 columns">
-					  <div>
-					    <div>
-					      <div class="large-4 large-centered text-center columns">
-					        <div class="alert-box success">Successfully updated information.</div>
-					      </div>
-					    </div>
-					  </div>
+				      <div class="large-4 large-centered text-center columns">
+				        <div class="alert-box success">Successfully updated information.</div>
+				      </div>
 					</div>
 				</div>
 		        ';
