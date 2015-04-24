@@ -56,8 +56,6 @@ require_once('php_scripts/loader.php');
       </div>
     </div>
 
-    <?php $user->create_user(); ?>
-
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/foundation/js/foundation.min.js"></script>
     <script src="js/app.js"></script>

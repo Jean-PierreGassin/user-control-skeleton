@@ -134,4 +134,5 @@ class user extends database
 
 global $user;
 $user = new user;
+$user->create_user();
 ?>
