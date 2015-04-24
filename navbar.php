@@ -15,7 +15,7 @@
         <a href="account.php">Welcome <?php echo $_SESSION['username']; ?>!</a>
         <ul class="dropdown">
           <?php if ($user->user_has_access()): ?>
-            <li><a href="cpanel.php">Control Panel</a></li>
+            <li><a href="control_panel.php">Control Panel</a></li>
           <?php endif; ?>
           <li><a href="account.php">My Account</a></li>
           <li><a href="logout.php">Logout</a></li>
