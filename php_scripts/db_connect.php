@@ -12,6 +12,7 @@ class database
 		$db_port = $DATABASE_PORT;
 		$db_name = $DATABASE_NAME;
 
+
 		$link = new mysqli($db_host, $db_user, $db_pass, $db_name);
 
 		if ($link->connect_error)
@@ -28,14 +29,17 @@ class database
 	protected function db_create_user($username, $password, $fname, $lname)
 	{
 		$password = md5($password);
+		$user_group = "1";
 
 		if ($link = $this->db_connect())
 		{
-			$query = 'INSERT INTO users (user,password,first_name,last_name,user_group) 
-		    VALUES ("' . $username . '", "' . $password . '", "' . $fname . '", "' . $lname . '", "1");';
+			if ($query = $link->prepare('INSERT INTO users (user,password,first_name,last_name,user_group) VALUES (?, ?, ?, ?, ?)'))
+			{			
+				$query->bind_param('sssss', $username, $password, $fname, $lname, $user_group);
+				$query->execute();
+				$query->close();
+				$link->close();
 
-			if (mysqli_query($link, $query))
-			{
 				if ($this->db_auth_user($username, $password))
 				{
 					return true;
@@ -48,18 +52,15 @@ class database
 	{
 		if ($link = $this->db_connect())
 		{
-			$query = 'SELECT password 
-				FROM users 
-				WHERE user = "' . $username . '";';
-
 			if ($this->db_compare_pass($username, $form_pass))
 			{
-				$query = 'UPDATE users 
-					SET first_name = "' . $fname . '", last_name = "' . $lname . '" 
-					WHERE user = "' . $username . '";';
-
-				if (mysqli_query($link, $query))
+				if ($query = $link->prepare('UPDATE users SET first_name = ?, last_name = ? WHERE user = ?'))
 				{
+					$query->bind_param('sss', $fname, $lname, $username);
+					$query->execute();
+					$query->close();
+					$link->close();
+
 					return true;
 				}
 			}
@@ -70,18 +71,15 @@ class database
 	{
 		if ($link = $this->db_connect())
 		{
-			$query = 'SELECT password 
-				FROM users 
-				WHERE user = "' . $username . '";';
-
 			if ($this->db_compare_pass($username, $form_pass))
 			{
-				$query = 'UPDATE users 
-					SET password = "' . $new_pass . '" 
-					WHERE user = "' . $username . '";';
-
-				if (mysqli_query($link, $query))
+				if ($query = $link->prepare('UPDATE users SET password = ? WHERE user = ?'))
 				{
+					$query->bind_param('ss', $new_pass, $username);
+					$query->execute();
+					$query->close();
+					$link->close();
+
 					return true;
 				}
 			}
@@ -92,48 +90,40 @@ class database
 	{
 		if ($link = $this->db_connect())
 		{
-			$query = 'SELECT password 
-				FROM users 
-				WHERE user = "' . $username . '";';
-
-			if ($get_password = mysqli_query($link, $query))
+			if ($query = $link->prepare('SELECT password FROM users WHERE user = ?'))
 			{
-				$result = mysqli_fetch_array($get_password, MYSQLI_ASSOC);
-				$db_pass = $result['password'];
+				$query->bind_param('s', $username);
+				$query->execute();
+				$result = $query->get_result();
+				$query->close();
+				$link->close();
 
-				if ($form_pass === $db_pass)
+				while ($field = $result->fetch_array(MYSQLI_ASSOC))
 				{
-					return true;
-				}
+					foreach ($field as $db_password)
+					{
+						if ($form_pass === $db_password)
+						{
+							return true;
+						}
+					}
+				}	
 			}
 		}
 	}
 
 	protected function db_auth_user($username, $password)
 	{
-		if ($link = $this->db_connect())
+		if ($this->db_compare_pass($username, $password))
 		{
-			$query = 'SELECT password 
-				FROM users 
-				WHERE user = "' . $username . '";';
-
-			if ($get_password = mysqli_query($link, $query))
-			{
-				$result = mysqli_fetch_array($get_password, MYSQLI_ASSOC);
-				$db_password = $result['password'];
-
-				if ($password === $db_password)
-				{
-					$_SESSION['logged_in'] = TRUE;
-					$_SESSION['username'] = $username;
-					return true;
-				} 
-				else
-				{
-					unset($_SESSION['logged_in']);
-					unset($_SESSION['username']);
-				}
-			}
+			$_SESSION['logged_in'] = TRUE;
+			$_SESSION['username'] = $username;
+			return true;
+		} 
+		else
+		{
+			unset($_SESSION['logged_in']);
+			unset($_SESSION['username']);
 		}
 	}
 
@@ -141,36 +131,42 @@ class database
 	{
 		if ($link = $this->db_connect())
 		{
+			generate_view::new_view('open_table');
+			generate_view::new_view('open_table_head');
+
+			if ($query = $link->prepare('SHOW COLUMNS FROM users'))
+			{
+				$query->execute();
+				$result = $query->get_result();
+				$query->close();
+			}
+
+			while ($field = $result->fetch_array(MYSQLI_ASSOC))
+			{
+				generate_view::new_view_array('user_table_headings', $field['Field']);
+			}	
+
+			generate_view::new_view('close_table_head');
+
 			foreach ($search as $item)
 			{
-				$query = 'SELECT * FROM users 
-				WHERE user 
-				LIKE "%' . $item . '%" 
-				OR first_name LIKE "%' . $item . '%" 
-				OR last_name LIKE "%' . $item . '%";';
+				$item = '%' . $item . '%';
 
-				$column_query = 'SHOW COLUMNS FROM users';
-
-				generate_view::new_view('open_table');
-				generate_view::new_view('open_table_head');
-
-				if ($result = mysqli_query($link, $column_query))
+				if ($query = $link->prepare('SELECT * FROM users WHERE user LIKE ? OR first_name LIKE ? OR last_name LIKE ?'))
 				{
-					while ($row['Field'] = mysqli_fetch_array($result, MYSQLI_ASSOC))
-					{
-						generate_view::new_view_array('user_table_headings', $row);
-					}	
-				}
-				generate_view::new_view('close_table_head');
+					$query->bind_param("sss", $item, $item, $item);
+					$query->execute();
+					$result = $query->get_result();
+					$query->close();
+					$link->close();
 
-				if ($result = mysqli_query($link, $query))
-				{
-					while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC))
+					while ($field = $result->fetch_array(MYSQLI_ASSOC))
 					{
-						generate_view::new_view_array('user_table_cells', $row);
+						generate_view::new_view_array('user_table_cells', $field);
 					}
-					generate_view::new_view('close_table');
 				}
+
+				generate_view::new_view('close_table');
 			}
 		}
 	}
@@ -180,11 +176,16 @@ class database
 		if ($link = $this->db_connect())
 		{
 			$username = $_SESSION['username'];
-			$query = 'SELECT * FROM users WHERE user = "' . $username . '";';
-			
-			if ($result = mysqli_query($link, $query))
+
+			if ($query = $link->prepare('SELECT * FROM users WHERE user = ?'))
 			{
-				while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC))
+				$query->bind_param('s', $username);
+				$query->execute();
+				$result = $query->get_result();
+				$query->close();
+				$link->close();
+
+				while ($row = $result->fetch_array(MYSQLI_ASSOC))
 				{
 					generate_view::new_view_array('update_page', $row);
 				}
@@ -196,11 +197,15 @@ class database
 	{
 		if ($link = $this->db_connect())
 		{
-			$query = 'SELECT user_group FROM users WHERE user = "' . $username . '";';
-			
-			if ($result = mysqli_query($link, $query))
+			if ($query = $link->prepare('SELECT user_group FROM users WHERE user = ?'))
 			{
-				while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC))
+				$query->bind_param('s', $username);
+				$query->execute();
+				$result = $query->get_result();
+				$query->close();
+				$link->close();
+
+				while ($row = $result->fetch_array(MYSQLI_ASSOC))
 				{
 					if ($row['user_group'] == 2)
 					{
