@@ -100,12 +100,9 @@ class generate_view
 		switch($view)
 		{
 			case('user_table_headings'):
-				foreach ($data as $heading)
-				{
 				echo '
-	            <td>' . $heading['Field'] . '</td>
+	            <td>' . $data . '</td>
 		        ';
-				}
 		        break;
 
 			case('user_table_cells'):
