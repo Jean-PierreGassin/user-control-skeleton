@@ -157,5 +157,4 @@ class user extends database
 
 $user = new user();
 check_user_activity();
-create_user();
 ?>

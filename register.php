@@ -2,7 +2,7 @@
 session_start();
 require_once('php_scripts/loader.php'); 
 ?>
-
+<?php create_user(); ?>
 <!doctype html>
 <html class="no-js" lang="en">
   <head>
@@ -51,6 +51,8 @@ require_once('php_scripts/loader.php');
         </form>
       </div>
     </div>
+
+    
 
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/foundation/js/foundation.min.js"></script>

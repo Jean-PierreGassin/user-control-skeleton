@@ -36,16 +36,28 @@ class database
 
 			if ($link = db_connect())
 			{
-				if ($query = $link->prepare('INSERT INTO users (user, password, first_name, last_name, user_group) VALUES (?, ?, ?, ?, ?)'))
-				{			
-					$query->bind_param('sssss', $username, $password, $fname, $lname, $user_group);
+				if ($query = $link->prepare('SELECT user FROM users WHERE user = ?'))
+				{
+					$query->bind_param('s', $username);
 					$query->execute();
-					$query->close();
-					$link->close();
+					$result = $query->get_result();
 
-					if (db_auth_user($username, $auth_password))
+					while ($field = $result->fetch_array(MYSQLI_ASSOC))
 					{
-						return true;
+						return false;
+					}
+
+					if ($query = $link->prepare('INSERT INTO users (user, password, first_name, last_name, user_group) VALUES (?, ?, ?, ?, ?)'))
+					{			
+						$query->bind_param('sssss', $username, $password, $fname, $lname, $user_group);
+						$query->execute();
+						$query->close();
+						$link->close();
+
+						if (db_auth_user($username, $auth_password))
+						{
+							return true;
+						}
 					}
 				}
 			}
