@@ -7,7 +7,7 @@ class login extends database
 		if (isset($_POST['login']) && !empty($_POST['username']) && !empty($_POST['password']))
 		{
 			$username = $_POST['username'];
-			$password = md5($_POST['password']);
+			$password = $_POST['password'];
 
 			if ($this->db_auth_user($username, $password))
 			{

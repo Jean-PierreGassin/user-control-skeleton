@@ -37,9 +37,9 @@ class user extends database
 			$username = $_SESSION['username'];
 			$fname = $_POST['first_name'];
 			$lname = $_POST['last_name'];
-			$db_pass = md5($_POST['db_pass']);
-			$new_pass = md5($_POST['new_pass']);
-			$confirm_pass = md5($_POST['confirm_pass']);
+			$db_pass = $_POST['db_pass'];
+			$new_pass = $_POST['new_pass'];
+			$confirm_pass = $_POST['confirm_pass'];
 
 			if ($new_pass === $confirm_pass)
 			{
@@ -63,7 +63,7 @@ class user extends database
 			$username = $_SESSION['username'];
 			$fname = $_POST['first_name'];
 			$lname = $_POST['last_name'];
-			$db_pass = md5($_POST['db_pass']);
+			$db_pass = $_POST['db_pass'];
 			
 			if ($this->db_update_user($username, $db_pass, $fname, $lname))
 			{
@@ -155,4 +155,5 @@ class user extends database
 global $user;
 $user = new user;
 $user->check_user_activity();
+$user->create_user();
 ?>

@@ -28,19 +28,20 @@ class database
 
 	protected function db_create_user($username, $password, $fname, $lname)
 	{
-		$password = md5($password);
+		$auth_password = $password;
+		$password = password_hash($password, PASSWORD_BCRYPT);
 		$user_group = "1";
 
 		if ($link = $this->db_connect())
 		{
-			if ($query = $link->prepare('INSERT INTO users (user,password,first_name,last_name,user_group) VALUES (?, ?, ?, ?, ?)'))
+			if ($query = $link->prepare('INSERT INTO users (user, password, first_name, last_name, user_group) VALUES (?, ?, ?, ?, ?)'))
 			{			
 				$query->bind_param('sssss', $username, $password, $fname, $lname, $user_group);
 				$query->execute();
 				$query->close();
 				$link->close();
 
-				if ($this->db_auth_user($username, $password))
+				if ($this->db_auth_user($username, $auth_password))
 				{
 					return true;
 				}
@@ -75,6 +76,7 @@ class database
 			{
 				if ($query = $link->prepare('UPDATE users SET password = ? WHERE user = ?'))
 				{
+					$new_pass = password_hash($new_pass, PASSWORD_BCRYPT);
 					$query->bind_param('ss', $new_pass, $username);
 					$query->execute();
 					$query->close();
@@ -102,7 +104,7 @@ class database
 				{
 					foreach ($field as $db_password)
 					{
-						if ($form_pass === $db_password)
+						if (password_verify($form_pass, $db_password))
 						{
 							return true;
 						}

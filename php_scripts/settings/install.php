@@ -36,12 +36,12 @@ class install
         $create_table = mysqli_query($link, 'CREATE TABLE IF NOT EXISTS users (
         id INT(6) AUTO_INCREMENT PRIMARY KEY,
         user VARCHAR(30) UNIQUE NOT NULL,
-        password VARCHAR(50) NOT NULL,
+        password VARCHAR(100) NOT NULL,
         first_name VARCHAR(30) NOT NULL,
         last_name VARCHAR(30) NOT NULL,
         user_group INT(2) NOT NULL);');
 
-        $password = md5($admin_pass);
+        $password = password_hash($admin_pass, PASSWORD_BCRYPT);
         $create_admin = mysqli_query($link, 'INSERT INTO users (user, password, first_name, last_name, user_group) 
           VALUES ("' . $admin_user . '", "' . $password . '", "Administrator", "Administrator", "2");');
 
