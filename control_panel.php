@@ -16,8 +16,8 @@ require_once('php_scripts/loader.php');
 
     <?php include('navbar.php'); ?>
 
-    <?php if ($user->check_user_status()): ?>
-    <?php if ($user->user_has_access()): ?>
+    <?php if (check_user_status()): ?>
+    <?php if (user_has_access()): ?>
     <div class="row">
       <div class="large-12 columns">
 
@@ -33,7 +33,7 @@ require_once('php_scripts/loader.php');
         </form>
 
         <?php if (isset($_POST['search_users'])): ?>
-          <?php $user->search_users(array($_POST['search_field']));?>
+          <?php search_users(array($_POST['search_field']));?>
         <?php endif; ?>
 
       </div>

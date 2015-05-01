@@ -2,22 +2,25 @@
 
 class login extends database
 {
-	function login_user()
+	function login()
 	{
-		if (isset($_POST['login']) && !empty($_POST['username']) && !empty($_POST['password']))
+		function login_user()
 		{
-			$username = $_POST['username'];
-			$password = $_POST['password'];
-
-			if ($this->db_auth_user($username, $password))
+			if (isset($_POST['login']) && !empty($_POST['username']) && !empty($_POST['password']))
 			{
-				header('Location: index.php');
+				$username = $_POST['username'];
+				$password = $_POST['password'];
+
+				if (db_auth_user($username, $password))
+				{
+					header('Location: index.php');
+				}
 			}
-		}
+		}		
 	}
+
 }
 
-global $login;
-$login = new login;
-$login->login_user();
+$login = new login();
+login_user();
 ?>

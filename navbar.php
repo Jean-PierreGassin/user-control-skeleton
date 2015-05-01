@@ -9,12 +9,12 @@
 
   <section class="top-bar-section">
 
-    <?php if ($user->check_user_status()): ?>
+    <?php if (check_user_status()): ?>
     <ul class="right">
       <li class="has-dropdown">
         <a href="account.php">Welcome <?php echo $_SESSION['username']; ?>!</a>
         <ul class="dropdown">
-          <?php if ($user->user_has_access()): ?>
+          <?php if (user_has_access()): ?>
             <li><a href="control_panel.php">Control Panel</a></li>
           <?php endif; ?>
           <li><a href="account.php">My Account</a></li>

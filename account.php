@@ -16,8 +16,8 @@ require_once('php_scripts/loader.php');
 
     <?php include('navbar.php'); ?>
 
-    <?php $user->update_user(); ?>
-    <?php if ($user->get_user_info()): ?>
+    <?php update_user(); ?>
+    <?php if (get_user_info()): ?>
 
     <?php else: ?>
     <div class="row">
