@@ -25,19 +25,20 @@
 
     <?php else: ?>
     <ul class="right">
-      <li class="right"><a href="register.php">Register</a></li>
-      <li class="divider right"></li>
       <li class="has-form">
         <div class="row collapse">
           <form method="POST" class="row collapse">
-            <div class="small-4 columns">
+            <div class="small-12 medium-3 large-3 columns">
               <input type="text" placeholder="Username" name="username" required/>
             </div>
-            <div class="small-4 columns">
+            <div class="small-12 medium-3 large-3 columns">
               <input type="password" placeholder="Password" name="password" required/>
             </div>
-            <div class="small-4 columns">
+            <div class="small-12 medium-3 large-3 columns">
               <button class="success button expand" type="submit" name="login">Login</button>
+            </div>
+            <div class="small-12 medium-3 large-3 columns">
+              <a class="button expand" href="register.php">Register</a>
             </div>
           </form>
         </div>
