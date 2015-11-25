@@ -1,18 +1,19 @@
 # User Control Skeleton
 
-A skeletal structure of a user login system, including installation and access control groups.
+A basic login system skeleton which was created for the sole purpose of educational learning and understanding - it includes installation and access control groups.
 
 ## Requirements
 
-  * MySQL Server (localhost will work for testing)
-  * PHP 5+ (Untested in previous versions)
+  * MySQL
+  * PHP 5+ (untested in previous versions)
   * [compass (optional)](http://compass-style.org/): `gem install compass`
   * [bower (optional)](http://bower.io): `npm install bower -g`
 
 ## Quickstart
 
-  * Download or clone this repo into your htdocs folder of your server
-  * Navigate to this projects index.php in your browser
+  * Clone this repo into your webserver
+  * Navigate to this repo in your browser
+  * Setup as necessary 
   
 ## NOTE OF CAUTION:
-  * Still in development, not recommended for commercial use!
+  * Still in development, not recommended for commercial use
