@@ -1,7 +1,8 @@
 <?php
 
-class install
-{
+namespace UserControlSkeleton\settings;
+
+class Install {
   function check_install()
   {
     include('settings.php');

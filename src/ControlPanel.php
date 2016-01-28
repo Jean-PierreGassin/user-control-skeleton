@@ -1,6 +1,11 @@
 <?php 
+
+namespace UserControlSkeleton;
+
+require '../vendor/autoload.php';
+
 session_start();
-require_once('php_scripts/loader.php'); 
+
 ?>
 
 <!doctype html>

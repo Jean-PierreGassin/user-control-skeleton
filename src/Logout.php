@@ -1,5 +1,7 @@
 <?php
 
+namespace UserControlSkeleton;
+
 function logout()
 {
 	session_start();
@@ -10,4 +12,3 @@ function logout()
 }
 
 logout();
-?>

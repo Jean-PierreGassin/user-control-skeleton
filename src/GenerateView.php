@@ -1,7 +1,8 @@
 <?php
 
-class generate_view
-{
+namespace UserControlSkeleton;
+
+class GenerateView {
 	public static function new_view($view)
 	{
 		switch($view)
@@ -148,5 +149,3 @@ class generate_view
 
 	}
 }
-
-?>

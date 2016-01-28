@@ -1,8 +1,21 @@
 <?php 
+
+namespace UserControlSkeleton;
+
+require '../vendor/autoload.php';
+
 session_start();
-require_once('php_scripts/loader.php'); 
+
 ?>
-<?php create_user(); ?>
+
+<?php 
+
+$user = new User;
+
+$user->create_user(); 
+
+?>
+
 <!doctype html>
 <html class="no-js" lang="en">
   <head>

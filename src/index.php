@@ -1,8 +1,20 @@
 <?php 
+
+namespace UserControlSkeleton;
+
+use UserControlSkeleton\settings\Install;
+
+require '../vendor/autoload.php';
+
 session_start();
-require_once('php_scripts/loader.php'); 
+
+$installed = new Install;
+
+if ($installed->check_install()): 
+
 ?>
 
+<?php else : ?>
 <!doctype html>
 <html class="no-js" lang="en">
   <head>
@@ -42,3 +54,5 @@ require_once('php_scripts/loader.php');
     <script src="js/app.js"></script>
   </body>
 </html>
+
+<?php endif ?>

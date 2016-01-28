@@ -1,7 +1,9 @@
 <?php
 
-class load_modules
-{
+namespace UserControlSkeleton;
+
+class LoadModules {
+
 	function get_modules()
 	{
 		include('php_scripts/settings/settings.php');
@@ -22,6 +24,5 @@ class load_modules
 	}
 }
 
-$load_modules = new load_modules;
+$load_modules = new LoadModules;
 $load_modules->get_modules();
-?>
