@@ -1,71 +1,19 @@
 <?php
 
-namespace UserControlSkeleton;
+namespace UserControlSkeleton\Models;
 
-class GenerateView {
-	public static function new_view($view)
+class GenerateViewWithMessage {
+	public static function renderView($view, $message = '')
 	{
 		switch($view)
 		{
-			case('unauthorized'):
-				echo '
-				<div class="row">
-					<div class="large-12 columns">
-				      <div class="large-12 large-centered text-center columns">
-				        <div class="alert-box alert">ERROR: Unauthorized!</div>
-				      </div>
-					</div>
-				</div>
-		        ';
-		        break;
+			case('error'):
+				return include('../Views/Error.php');
+		    break;
 
-			case('wrong_pass'):
-				echo '
-				<div class="row">
-					<div class="large-12 columns">
-				      <div class="large-4 large-centered text-center columns">
-				        <div class="alert-box alert">Incorrect Password!</div>
-				      </div>
-					</div>
-				</div>
-		        ';
-		        break;
-
-			case('pass_mismatch'):
-				echo '
-				<div class="row">
-					<div class="large-12 columns">
-				      <div class="large-4 large-centered text-center columns">
-				        <div class="alert-box alert">Passwords do not match.</div>
-				      </div>
-					</div>
-				</div>
-		        ';
-		        break;
-
-			case('user_exists'):
-				echo '
-				<div class="row">
-					<div class="large-12 columns">
-				      <div class="large-4 large-centered text-center columns">
-				        <div class="alert-box alert">Username already exists.</div>
-				      </div>
-					</div>
-				</div>
-		        ';
-		        break;
-
-			case('update_success'):
-				echo '
-				<div class="row">
-					<div class="large-12 columns">
-				      <div class="large-4 large-centered text-center columns">
-				        <div class="alert-box success">Successfully updated information.</div>
-				      </div>
-					</div>
-				</div>
-		        ';
-		        break;
+			case('success'):
+				return include('../Views/Success.php');
+		    break;
 
 			case('open_table'):
 				echo '

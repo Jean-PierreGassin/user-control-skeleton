@@ -1,20 +1,18 @@
 <?php
 
-namespace UserControlSkeleton\settings;
+namespace UserControlSkeleton\Settings;
+
+use mysqli;
 
 class Install {
   function check_install()
   {
-    include('settings.php');
+    include($_SERVER['DOCUMENT_ROOT'] . '/Settings/settings.php');
 
-    if (empty($DATABASE_HOST) || empty($DATABASE_NAME) || empty($DATABASE_USER) || empty($DATABASE_PWRD) || empty($DATABASE_PORT))
+    if (!empty($DATABASE_HOST) && !empty($DATABASE_NAME) && !empty($DATABASE_USER) && !empty($DATABASE_PWRD) && !empty($DATABASE_PORT))
     {
       return true;
     } 
-    else
-    {
-      header('Location: ../../index.php');
-    }
   }
 
   function test_database($DATABASE_HOST, $DATABASE_USER, $DATABASE_PWRD, $DATABASE_NAME, $DATABASE_PORT, $admin_user, $admin_pass)
@@ -28,6 +26,7 @@ class Install {
     else
     {
       
+      // need to add condition to check if registering user exists !!
       function db_create_update($link, $DATABASE_HOST, $DATABASE_USER, $DATABASE_PWRD, $DATABASE_NAME, $DATABASE_PORT, $admin_user, $admin_pass)
       {
         $create_db = mysqli_query($link, 'CREATE DATABASE IF NOT EXISTS ' . $DATABASE_NAME . ';');
@@ -91,7 +90,7 @@ class Install {
       {
         if ($this->test_database($DATABASE_HOST, $DATABASE_USER, $DATABASE_PWRD, $DATABASE_NAME, $DATABASE_PORT, $admin_user, $admin_pass))
         {
-          $settings = fopen('settings.php', 'w');
+          $settings = fopen($_SERVER['DOCUMENT_ROOT'] . '/Settings/settings.php', 'w');
           $newSettings = array(
   '<?php
     $DATABASE_HOST = "' . $DATABASE_HOST . '";
@@ -102,9 +101,9 @@ class Install {
   ?>'
           );
 
-          file_put_contents('settings.php', $newSettings);
+          file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/Settings/settings.php', $newSettings);
 
-          header('Location: ../../index.php'); 
+          header('Location: index.php'); 
         }
       }
       else
@@ -131,72 +130,5 @@ class Install {
 $install = new install();
 $install->check_install();
 $install->write_settings();
-?>
 
-<!doctype html>
-<html class="no-js" lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Example Site</title>
-    <link rel="stylesheet" href="../../stylesheets/app.css" />
-    <script src="../../bower_components/modernizr/modernizr.js"></script>
-  </head>
-  <body>
 
-    <div class="row">
-      <div class="large-12 columns">
-        <div>
-          <div>
-            <div>&nbsp;</div>
-             <form method="POST" class="large-6 columns large-centered">
-              <div class="row collapse">
-                <div class="small-12">
-                  <div class="small-12 columns">
-                    Database Host:
-                    <input type="text" name="db_host"/>
-                  </div>
-                  <div class="small-12 columns">
-                    Database Name (existing or new):
-                    <input type="text" name="db_name"/>
-                  </div>
-                  <div class="small-12 columns">
-                    Database Username (e.g: root):
-                    <input type="text" name="db_user"/>
-                  </div>
-                  <div class="small-12 columns">
-                    Database Password:
-                    <input type="password" name="db_pwrd"/>
-                  </div>
-                  <div class="small-12 columns">
-                    Database Port (Default 3306):
-                    <input type="text" value="3306" name="db_port"/>
-                  </div>
-                  <div class="small-12 columns">
-                    Your Username:
-                    <input type="text" name="admin_user"/>
-                  </div>
-                  <div class="small-6 columns">
-                    Your Password:
-                    <input type="password" name="admin_pass"/>
-                  </div>
-                  <div class="small-6 columns">
-                    Confirm Password:
-                    <input type="password" name="admin_pass_confirm"/>
-                  </div>
-                <div class="small-6 left columns">
-                  <button class="button small warning" type="submit" name="run_install">Verify Installation</button>
-                </div>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="../../bower_components/foundation/js/foundation.min.js"></script>
-    <script src="../../js/app.js"></script>
-  </body>
-</html>

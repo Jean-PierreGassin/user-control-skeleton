@@ -1,6 +1,6 @@
 <?php
 
-namespace UserControlSkeleton;
+namespace UserControlSkeleton\Models;
 
 function logout()
 {
@@ -8,7 +8,7 @@ function logout()
 	unset($_SESSION['logged_in']);
 	unset($_SESSION['username']);
 	session_destroy();
-	header("Location: index.php");	
+	header("Location: ../index.php");	
 }
 
 logout();

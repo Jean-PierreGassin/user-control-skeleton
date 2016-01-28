@@ -1,13 +1,13 @@
 <?php
 
-namespace UserControlSkeleton;
+namespace UserControlSkeleton\Models;
 
 use mysqli;
 
 class Database {
 	public function db_connect()
 	{
-		include('settings/settings.php');
+		include($_SERVER['DOCUMENT_ROOT'] . '/Settings/settings.php');
 
 		$db_user = $DATABASE_USER;
 		$db_pass = $DATABASE_PWRD;
@@ -55,7 +55,7 @@ class Database {
 					$query->close();
 					$link->close();
 
-					if (db_auth_user($username, $auth_password))
+					if ($this->db_auth_user($username, $auth_password))
 					{
 						return true;
 					}
@@ -68,7 +68,7 @@ class Database {
 	{
 		if ($link = db_connect())
 		{
-			if (db_compare_pass($username, $form_pass))
+			if ($this->db_compare_pass($username, $form_pass))
 			{
 				if ($query = $link->prepare('UPDATE users SET first_name = ?, last_name = ? WHERE user = ?'))
 				{
@@ -85,9 +85,9 @@ class Database {
 
 	public function db_update_user_password($username, $form_pass, $new_pass)
 	{
-		if ($link = db_connect())
+		if ($link = $this->db_connect())
 		{
-			if (db_compare_pass($username, $form_pass))
+			if ($this->db_compare_pass($username, $form_pass))
 			{
 				if ($query = $link->prepare('UPDATE users SET password = ? WHERE user = ?'))
 				{
@@ -105,7 +105,7 @@ class Database {
 
 	public function db_compare_pass($username, $form_pass)
 	{
-		if ($link = db_connect())
+		if ($link = $this->db_connect())
 		{
 			if ($query = $link->prepare('SELECT password FROM users WHERE user = ?'))
 			{
@@ -131,7 +131,7 @@ class Database {
 
 	public function db_auth_user($username, $password)
 	{
-		if (db_compare_pass($username, $password))
+		if ($this->db_compare_pass($username, $password))
 		{
 			$_SESSION['logged_in'] = TRUE;
 			$_SESSION['username'] = $username;
@@ -146,10 +146,10 @@ class Database {
 
 	public function db_search_users($search)
 	{
-		if ($link = db_connect())
+		if ($link = $this->db_connect())
 		{
-			generate_view::new_view('open_table');
-			generate_view::new_view('open_table_head');
+			GenerateViewWithMessage::renderView('open_table');
+			GenerateViewWithMessage::renderView('open_table_head');
 
 			if ($query = $link->prepare('SHOW COLUMNS FROM users'))
 			{
@@ -160,10 +160,10 @@ class Database {
 
 			while ($field = $result->fetch_array(MYSQLI_ASSOC))
 			{
-				generate_view::new_view_array('user_table_headings', $field['Field']);
+				GenerateViewWithMessage::new_view_array('user_table_headings', $field['Field']);
 			}	
 
-			generate_view::new_view('close_table_head');
+			GenerateViewWithMessage::renderView('close_table_head');
 
 			foreach ($search as $item)
 			{
@@ -179,18 +179,18 @@ class Database {
 
 					while ($field = $result->fetch_array(MYSQLI_ASSOC))
 					{
-						generate_view::new_view_array('user_table_cells', $field);
+						GenerateViewWithMessage::new_view_array('user_table_cells', $field);
 					}
 				}
 
-				generate_view::new_view('close_table');
+				GenerateViewWithMessage::renderView('close_table');
 			}
 		}
 	}
 
 	public function db_get_user_info()
 	{
-		if ($link = db_connect())
+		if ($link = $this->db_connect())
 		{
 			$username = $_SESSION['username'];
 
@@ -204,7 +204,7 @@ class Database {
 
 				while ($row = $result->fetch_array(MYSQLI_ASSOC))
 				{
-					generate_view::new_view_array('update_page', $row);
+					GenerateViewWithMessage::new_view_array('update_page', $row);
 				}
 			}
 		}
@@ -212,7 +212,7 @@ class Database {
 
 	public function db_check_user_access($username)
 	{
-		if ($link = db_connect())
+		if ($link = $this->db_connect())
 		{
 			if ($query = $link->prepare('SELECT user_group FROM users WHERE user = ?'))
 			{
@@ -234,4 +234,4 @@ class Database {
 	}		
 }
 
-$database = new Database();
+$database = new Database;

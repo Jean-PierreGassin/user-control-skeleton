@@ -1,8 +1,10 @@
 <?php 
 
-namespace UserControlSkeleton;
+namespace UserControlSkeleton\Views;
 
-require '../vendor/autoload.php';
+include(dirname($_SERVER['DOCUMENT_ROOT']) . '/vendor/autoload.php');
+
+use UserControlSkeleton\Models\User;
 
 session_start();
 
@@ -16,21 +18,21 @@ $user->create_user();
 
 ?>
 
-<!doctype html>
+<!DOCTYPE html>
 <html class="no-js" lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Example Site</title>
-    <link rel="stylesheet" href="stylesheets/app.css" />
-    <script src="bower_components/modernizr/modernizr.js"></script>
+    <link rel="stylesheet" href="../stylesheets/app.css" />
+    <script src="../bower_components/modernizr/modernizr.js"></script>
   </head>
   <body>
 
     <nav class="top-bar" data-topbar role="navigation">
       <ul class="title-area">
         <li class="name">
-          <h1><a href="index.php">Example Site</a></h1>
+          <h1><a href="<?php $_SERVER['DOCUMENT_ROOT']; ?>/index.php">Example Site</a></h1>
         </li>
       </ul>
 
@@ -67,8 +69,8 @@ $user->create_user();
 
     
 
-    <script src="bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="bower_components/foundation/js/foundation.min.js"></script>
-    <script src="js/app.js"></script>
+    <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="../bower_components/foundation/js/foundation.min.js"></script>
+    <script src="../js/app.js"></script>
   </body>
 </html>

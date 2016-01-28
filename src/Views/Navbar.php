@@ -1,15 +1,17 @@
 <?php
 
-namespace UserControlSkeleton;
+namespace UserControlSkeleton\Views;
 
-require '../vendor/autoload.php';
+use UserControlSkeleton\Models\User;
+
+include(dirname($_SERVER['DOCUMENT_ROOT']) . '/vendor/autoload.php');
 
 ?>
 
 <nav class="top-bar" data-topbar role="navigation">
   <ul class="title-area">
     <li class="name">
-      <h1><a href="index.php">Example Site</a></h1>
+      <h1><a href="<?php $_SERVER['DOCUMENT_ROOT']; ?>/index.php">Example Site</a></h1>
     </li>
      <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
     <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
@@ -23,13 +25,13 @@ require '../vendor/autoload.php';
     ?>
     <ul class="right">
       <li class="has-dropdown">
-        <a href="account.php">Welcome <?php echo $_SESSION['username']; ?>!</a>
+        <a href="<?php $_SERVER['DOCUMENT_ROOT']; ?>Views/Account.php">Welcome <?php echo $_SESSION['username']; ?>!</a>
         <ul class="dropdown">
           <?php if ($user->user_has_access()): ?>
-            <li><a href="control_panel.php">Control Panel</a></li>
+            <li><a href="<?php $_SERVER['DOCUMENT_ROOT']; ?>Views/ControlPanel.php">Control Panel</a></li>
           <?php endif; ?>
-          <li><a href="account.php">My Account</a></li>
-          <li><a href="logout.php">Logout</a></li>
+          <li><a href="<?php $_SERVER['DOCUMENT_ROOT']; ?>Views/Account.php">My Account</a></li>
+          <li><a href="<?php $_SERVER['DOCUMENT_ROOT']; ?>Models/Logout.php">Logout</a></li>
         </ul>
       </li>
     </ul>
@@ -49,7 +51,7 @@ require '../vendor/autoload.php';
               <button class="success button expand" type="submit" name="login">Login</button>
             </div>
             <div class="small-12 medium-3 large-3 columns">
-              <a class="button expand" href="register.php">Register</a>
+              <a class="button expand" href="<?php $_SERVER['DOCUMENT_ROOT']; ?>Views/Register.php">Register</a>
             </div>
           </form>
         </div>

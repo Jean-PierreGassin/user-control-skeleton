@@ -1,6 +1,6 @@
 <?php
 
-namespace UserControlSkeleton;
+namespace UserControlSkeleton\Models;
 
 class LoadModules {
 

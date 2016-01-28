@@ -1,11 +1,16 @@
 <?php
 
-namespace UserControlSkeleton;
+namespace UserControlSkeleton\Models;
 
 class User extends Database {
 	public function create_user()
 	{
-		if (isset($_POST['register_user']) && !empty($_POST['username']) && !empty($_POST['password']) && !empty($_POST['password_confirm']) && !empty($_POST['first_name']) && !empty($_POST['last_name']))
+		if (isset($_POST['register_user']) &&
+			!empty($_POST['username']) && 
+			!empty($_POST['password']) && 
+			!empty($_POST['password_confirm']) && 
+			!empty($_POST['first_name']) && 
+			!empty($_POST['last_name']))
 		{
 			$username = $_POST['username'];
 			$password = $_POST['password'];
@@ -17,16 +22,16 @@ class User extends Database {
 			{
 				if (Database::db_create_user($username, $password, $fname, $lname))
 				{
-					header('Location: index.php');
+					header("Location: ../index.php");	
 				}
 				else
 				{
-					GenerateView::new_view('user_exists');
+					GenerateViewWithMessage::renderView('error', 'Username already exists.');
 				}
 			}
 			else
 			{
-				GenerateView::new_view('pass_mismatch');
+				GenerateViewWithMessage::renderView('error', 'Passwords do not match.');
 			}
 		}
 	}
@@ -44,18 +49,18 @@ class User extends Database {
 
 			if ($new_pass === $confirm_pass)
 			{
-				if (db_update_user_password($username, $db_pass, $new_pass))
+				if ($this->db_update_user_password($username, $db_pass, $new_pass))
 				{
-					GenerateView::new_view('update_success');
+					GenerateViewWithMessage::renderView('success', 'Updated information successfully.');
 				}
 				else
 				{
-					GenerateView::new_view('wrong_pass');
+					GenerateViewWithMessage::renderView('error', 'Wrong password.');
 				}
 			}
 			else
 			{
-				GenerateView::new_view('pass_mismatch');
+				GenerateViewWithMessage::renderView('error', 'Passwords do not match.');
 			}
 		}
 
@@ -68,36 +73,36 @@ class User extends Database {
 			
 			if (db_update_user($username, $db_pass, $fname, $lname))
 			{
-				GenerateView::new_view('update_success');
+				GenerateViewWithMessage::renderView('success', 'Updated successfully.');
 			}
 			else
 			{
-				GenerateView::new_view('wrong_pass');
+				GenerateViewWithMessage::renderView('error', 'Wrong password.');
 			}	
 		}
 	}
 
 	public function search_users($search)
 	{
-		if (check_user_status())
+		if ($this->check_user_status())
 		{
-			if (user_has_access())
+			if ($this->user_has_access())
 			{
-				db_search_users($search);
+				$this->db_search_users($search);
 				return true;
 			}
 			else
 			{
-				GenerateView::new_view('unauthorized');
+				GenerateViewWithMessage::renderView('error', 'You are not authorized to perform this action.');
 			}
 		}
 	}
 
 	public function get_user_info()
 	{
-		if (check_user_status())
+		if ($this->check_user_status())
 		{
-			db_get_user_info();
+			$this->db_get_user_info();
 			return true;
 		}
 	}
@@ -122,7 +127,7 @@ class User extends Database {
 	{
 		$username = $_SESSION['username'];
 
-		if (db_check_user_access($username))
+		if ($this->db_check_user_access($username))
 		{
 			return true;
 		} 

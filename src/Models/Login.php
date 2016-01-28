@@ -1,6 +1,8 @@
 <?php
 
-namespace UserControlSkeleton;
+namespace UserControlSkeleton\Models;
+
+use UserControlSkeleton\Database;
 
 class Login extends Database {
 
@@ -11,9 +13,9 @@ class Login extends Database {
 			$username = $_POST['username'];
 			$password = $_POST['password'];
 
-			if (db_auth_user($username, $password))
+			if ($database->db_auth_user($username, $password))
 			{
-				header('Location: index.php');
+				// header("Location: ../index.php");
 			}
 		}
 	}	
@@ -21,4 +23,4 @@ class Login extends Database {
 }
 
 $login = new Login();
-login_user();
+$login->login_user();
