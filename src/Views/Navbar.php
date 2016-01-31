@@ -4,8 +4,6 @@ namespace UserControlSkeleton\Views;
 
 use UserControlSkeleton\Models\User;
 
-include(dirname($_SERVER['DOCUMENT_ROOT']) . '/vendor/autoload.php');
-
 ?>
 
 <nav class="top-bar" data-topbar role="navigation">
@@ -19,19 +17,17 @@ include(dirname($_SERVER['DOCUMENT_ROOT']) . '/vendor/autoload.php');
 
   <section class="top-bar-section">
 
-    <?php 
-    $user = new User;
-    if ($user->check_user_status()): 
-    ?>
+    <?php $user = new User;  ?>
+    <?php if ($user->getLoginStatus()): ?>
     <ul class="right">
       <li class="has-dropdown">
-        <a href="<?php $_SERVER['DOCUMENT_ROOT']; ?>Views/Account.php">Welcome <?php echo $_SESSION['username']; ?>!</a>
+        <a href="Account.php">Welcome <?php echo $_SESSION['username']; ?>!</a>
         <ul class="dropdown">
-          <?php if ($user->user_has_access()): ?>
-            <li><a href="<?php $_SERVER['DOCUMENT_ROOT']; ?>Views/ControlPanel.php">Control Panel</a></li>
+          <?php if ($user->getAccess()): ?>
+            <li><a href="ControlPanel.php">Control Panel</a></li>
           <?php endif; ?>
-          <li><a href="<?php $_SERVER['DOCUMENT_ROOT']; ?>Views/Account.php">My Account</a></li>
-          <li><a href="<?php $_SERVER['DOCUMENT_ROOT']; ?>Models/Logout.php">Logout</a></li>
+          <li><a href="Account.php">My Account</a></li>
+          <li><a href="/Views/Logout.php">Logout</a></li>
         </ul>
       </li>
     </ul>
@@ -51,7 +47,7 @@ include(dirname($_SERVER['DOCUMENT_ROOT']) . '/vendor/autoload.php');
               <button class="success button expand" type="submit" name="login">Login</button>
             </div>
             <div class="small-12 medium-3 large-3 columns">
-              <a class="button expand" href="<?php $_SERVER['DOCUMENT_ROOT']; ?>Views/Register.php">Register</a>
+              <a class="button expand" href="Register.php">Register</a>
             </div>
           </form>
         </div>

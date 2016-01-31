@@ -1,43 +1,27 @@
-<?php 
-
-namespace UserControlSkeleton\Views;
-
-use UserControlSkeleton\Models\User;
-
-include(dirname($_SERVER['DOCUMENT_ROOT']) . '/vendor/autoload.php');
-
-session_start();
-
-?>
-
-<!DOCTYPE html>
-<html class="no-js" lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Example Site</title>
-    <link rel="stylesheet" href="../stylesheets/app.css" />
-    <script src="../bower_components/modernizr/modernizr.js"></script>
-  </head>
-  <body>
-
-    <?php include('navbar.php'); ?>
-
-    <?php $user->update_user(); ?>
-    <?php if ($user->get_user_info()): ?>
-
-    <?php else: ?>
-    <div class="row">
-      <div class="large-12 columns">
-        <div class="large-12 large-centered text-center columns">
-          <div class="alert-box warning">You are not logged in.</div>
-        </div>
-      </div>
+<form method="POST" class="large-4 large-centered columns">
+    <div class="large-12 columns">
+        <input disabled type="text" value="<?php echo $message['user'] ?> " name="username" maxlength="20"/>
     </div>
-    <?php endif; ?>  
-
-    <script src="../bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="../bower_components/foundation/js/foundation.min.js"></script>
-    <script src="../js/app.js"></script>
-  </body>
-</html>
+    <div class="small-12 columns">
+        First name:<br/>
+        <input type="text" value="<?php echo $message['first_name']  ?>" name="first_name" maxlength="20"/>
+    </div>
+    <div class="small-12 columns">
+        Last name:<br/>
+        <input type="text" value="<?php echo $message['last_name'] ?>" name="last_name" maxlength="20"/>
+    </div>
+    <div class="small-6 columns">
+        New Password:<br/>
+        <input type="password" name="new_pass" maxlength="20"/>
+    </div>
+    <div class="small-6 columns">
+        Confirm Password:<br/>
+        <input type="password" name="confirm_pass" maxlength="20"/>
+    </div>
+    <div class="small-6 columns">
+        <input type="password" placeholder="Current Password" name="db_pass" maxlength="20" required/>
+    </div>
+    <div class="small-6 columns">
+        <button class="postfix" type="submit" name="update_user">Update</button>
+    </div>
+</form>

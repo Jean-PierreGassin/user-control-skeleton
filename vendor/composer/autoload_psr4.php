@@ -7,4 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'UserControlSkeleton\\' => array($baseDir . '/src'),
+    'Dotenv\\' => array($vendorDir . '/vlucas/phpdotenv/src'),
 );
