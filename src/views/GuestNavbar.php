@@ -22,7 +22,7 @@
                             <button class="success button expand" type="submit" name="login">Login</button>
                         </div>
                         <div class="small-12 medium-3 large-3 columns">
-                            <a class="button expand" href="Register">Register</a>
+                            <a class="button expand" href="/Register">Register</a>
                         </div>
                     </form>
                 </div>

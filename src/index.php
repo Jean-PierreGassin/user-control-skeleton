@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace UserControlSkeleton;
 
@@ -13,10 +13,11 @@ session_start();
 include_once('Views/Header.php');
 
 $user = new UserController;
-$route = new RouteController;
-$dotenv = new Dotenv(__DIR__ . '/../');
 
-$dotenv->load();
+$route = new RouteController;
 $route->switchView();
+
+$dotenv = new Dotenv(__DIR__ . '/../');
+$dotenv->load();
 
 include_once('Views/Footer.php');
