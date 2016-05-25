@@ -16,7 +16,8 @@ A basic login system skeleton which was created for the sole purpose of educatio
   * Create a 'user_control_skeleton'
   * Run the following SQL:
 
-  ```CREATE TABLE IF NOT EXISTS users (
+  ```
+  CREATE TABLE IF NOT EXISTS users (
       id INT(6) AUTO_INCREMENT PRIMARY KEY,
       user VARCHAR(30) UNIQUE NOT NULL,
       password VARCHAR(100) NOT NULL,
