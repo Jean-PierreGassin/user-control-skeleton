@@ -6,14 +6,24 @@ A basic login system skeleton which was created for the sole purpose of educatio
 
   * MySQL
   * PHP 5+ (untested in previous versions)
-  * [compass (optional)](http://compass-style.org/): `gem install compass`
-  * [bower (optional)](http://bower.io): `npm install bower -g`
+  * [bower](http://bower.io): `npm install bower -g`
 
 ## Quickstart
 
-  * Clone this repo into your webserver
-  * Navigate to this repo in your browser
-  * Setup as necessary 
-  
+  * Clone this repo into your web server
+  * Composer/bower install
+  * Re-name 'env.example' to '.env'
+  * Create a 'user_control_skeleton'
+  * Run the following SQL:
+
+  `CREATE TABLE IF NOT EXISTS users (
+      id INT(6) AUTO_INCREMENT PRIMARY KEY,
+      user VARCHAR(30) UNIQUE NOT NULL,
+      password VARCHAR(100) NOT NULL,
+      first_name VARCHAR(30) NOT NULL,
+      last_name VARCHAR(30) NOT NULL,
+      user_group INT(2) NOT NULL
+  );`
+
 ## NOTE OF CAUTION:
-  * Still in development, not recommended for commercial use
+  * Still in development, not for commercial use
