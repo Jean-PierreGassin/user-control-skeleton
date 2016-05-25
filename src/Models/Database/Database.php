@@ -9,7 +9,7 @@ class Database
 	protected $user;
 
 	protected $pass;
-
+	
 	protected $host;
 
 	protected $port;
@@ -28,14 +28,14 @@ class Database
 		$this->driver = getenv('DATABASE_DRIVER');
 	}
 
-    public function connect()
-    {
-        try {
-            $link = new PDO($this->driver.':host='.$this->host.';port='.$this->port.';dbname='.$this->name.';charset=UTF8;', $this->user, $this->pass);
+	public function connect()
+	{
+		try {
+			$link = new PDO($this->driver.':host='.$this->host.';port='.$this->port.';dbname='.$this->name.';charset=UTF8;', $this->user, $this->pass);
 
-            return $link;
-        } catch (PDOException $e) {
-            GenerateViewWithMessage::renderView('error', $e->getMessage());
-        }
-    }
+			return $link;
+		} catch (PDOException $e) {
+			GenerateViewWithMessage::renderView('error', $e->getMessage());
+		}
+	}
 }
