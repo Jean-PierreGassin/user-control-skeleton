@@ -32,8 +32,7 @@ class RouteController
         }
 
 		if ($this->getRoute() === '/Logout') {
-			session_destroy();
-			header("Location: ../index.php");
+			$user->logout();
 		}
 
         if ($user->getLoginStatus() && $user->isAdmin()) {
@@ -44,13 +43,17 @@ class RouteController
             GenerateView::renderView('/GuestNavBar');
         }
 
-        if ($this->getRoute() == '/controlPanel' && !$user->isAdmin()) {
+        if ($this->getRoute() === '/controlPanel' && !$user->isAdmin()) {
             GenerateViewWithMessage::renderView('error', 'You are not authorized.');
-        } else if ($this->getRoute() == '/Account' && $user->getLoginStatus()) {
-            GenerateViewWithMessage::renderView($this->getRoute(), $user->getInfo());
-        } else {
-            GenerateView::renderView($this->getRoute());
         }
+
+		if ($this->getRoute() === '/Account' && $user->getLoginStatus()) {
+            GenerateViewWithMessage::renderView($this->getRoute(), $user->getInfo());
+        }
+
+		if ($this->getRoute() === '/') {
+			GenerateView::renderView($this->getRoute());
+		}
 
         if (isset($_POST['search_users'])) {
             GenerateViewWithMessage::renderView('UserTable', $user->searchUsers($_POST['search_field']), $user->getColumns());
