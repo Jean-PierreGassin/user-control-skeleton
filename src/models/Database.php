@@ -15,6 +15,8 @@ class Database
         $name = getenv('DATABASE_NAME');
         $driver = getenv('DATABASE_DRIVER');
 
+		echo 'Driver: ' . $driver;
+
         try {
             $link = new PDO($driver.':host='.$host.';port='.$port.';dbname='.$name.';charset=UTF8;', $username, $password);
 
