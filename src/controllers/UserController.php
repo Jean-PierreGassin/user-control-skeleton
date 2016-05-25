@@ -23,6 +23,7 @@ class UserController
             $password = $_POST['password'];
 
             $this->authenticateUser($username, $password);
+			header("Location: ../Account");
         }
 
         GenerateViewWithMessage::renderView('error', 'Incorrect login details.');

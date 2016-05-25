@@ -19,15 +19,7 @@ class RouteController
     {
         $user = new UserController;
 
-        if ($user->getLoginStatus() && $user->isAdmin()) {
-            GenerateView::renderView('/AdminNavBar');
-        } else if ($user->getLoginStatus()) {
-            GenerateView::renderView('/UserNavBar');
-        } else {
-            GenerateView::renderView('/GuestNavBar');
-        }
-
-        if (isset($_POST['login'])) {
+		if (isset($_POST['login'])) {
             $user->login();
         }
 
@@ -37,6 +29,19 @@ class RouteController
 
         if (isset($_POST['update_user'])) {
             $user->updateUser();
+        }
+
+		if ($this->getRoute() === '/Logout') {
+			session_destroy();
+			header("Location: ../index.php");
+		}
+
+        if ($user->getLoginStatus() && $user->isAdmin()) {
+            GenerateView::renderView('/AdminNavBar');
+        } else if ($user->getLoginStatus()) {
+            GenerateView::renderView('/UserNavBar');
+        } else {
+            GenerateView::renderView('/GuestNavBar');
         }
 
         if ($this->getRoute() == '/controlPanel' && !$user->isAdmin()) {
