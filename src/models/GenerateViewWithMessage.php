@@ -8,7 +8,7 @@ class GenerateViewWithMessage
     {
         switch($view) {
             case('/Account'):
-            return include('Views/Account.php');
+            return include('Views/Pages/Account.php');
             break;
 
             case('UserTable'):
@@ -16,11 +16,11 @@ class GenerateViewWithMessage
             break;
 
             case('error'):
-            return include('Views/Error.php');
+            return include('Views/Messages/Error.php');
             break;
 
             case('success'):
-            return include('Views/Success.php');
+            return include('Views/Messages/Success.php');
             break;
         }
     }

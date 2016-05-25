@@ -8,35 +8,31 @@ class GenerateView
     {
         switch($view) {
             case('/'):
-            return include('Views/Home.php');
+            return include('Views/Pages/Home.php');
             break;
 
             case('/UserNavBar'):
-            return include('Views/UserNavBar.php');
+            return include('Views/Navigation/UserNavBar.php');
             break;
 
             case('/GuestNavBar'):
-            return include('Views/GuestNavBar.php');
+            return include('Views/Navigation/GuestNavBar.php');
             break;
 
             case('/AdminNavBar'):
-            return include('Views/AdminNavBar.php');
+            return include('Views/Navigation/AdminNavBar.php');
             break;
 
             case('/Register'):
-            return include('Views/Register.php');
-            break;
-
-            case('/Logout'):
-            return include('Views/Logout.php');
+            return include('Views/Pages/Register.php');
             break;
 
             case('/controlPanel'):
-            return include('Views/ControlPanel.php');
+            return include('Views/Pages/ControlPanel.php');
             break;
 
             default:
-            return include('Views/Home.php');
+            return include('Views/Pages/Home.php');
             break;
         }
     }
