@@ -2,18 +2,19 @@
 
 namespace UserControlSkeleton\Controllers;
 
-use UserControlSkeleton\Models\Database;
+use UserControlSkeleton\Models\User\User;
+use UserControlSkeleton\Models\Database\Database;
 use UserControlSkeleton\Models\GenerateView;
 use UserControlSkeleton\Models\GenerateViewWithMessage;
 
 class UserController
 {
-    public function database()
-    {
-        $database = new Database;
+	protected $user;
 
-        return $database;
-    }
+	public function __construct()
+	{
+		$this->user = new User();
+	}
 
     public function login()
     {
@@ -29,7 +30,7 @@ class UserController
 
     public function authenticateUser($username, $password)
     {
-        if ($this->database()->comparePasswords($username, $password)) {
+        if ($this->user->comparePasswords($username, $password)) {
             $_SESSION['logged_in'] = true;
             $_SESSION['username'] = $username;
 
@@ -62,15 +63,17 @@ class UserController
             $firstName = $_POST['first_name'];
             $lastName = $_POST['last_name'];
 
-            if ($password1 === $password2) {
-                $this->database()->createUser($username, $password1, $firstName, $lastName);
+            if ($password1 !== $password2) {
+				GenerateViewWithMessage::renderView('error', 'Passwords do not match.');
 
-                $this->authenticateUser($username, $password1);
-
-                GenerateViewWithMessage::renderView('error', 'Username already exists.');
-            } else {
-                GenerateViewWithMessage::renderView('error', 'Passwords do not match.');
+				return;
             }
+
+			if (!$this->user->createUser($username, $password1, $firstName, $lastName)) {
+				GenerateViewWithMessage::renderView('error', 'Username already exists.');
+			}
+
+			$this->authenticateUser($username, $password1);
         }
     }
 
@@ -81,7 +84,7 @@ class UserController
     public function getInfo()
     {
         if ($this->getLoginStatus()) {
-            $user = $this->database()->getUserInfo();
+            $user = $this->user->getUserInfo();
 
             return $user;
         }
@@ -91,7 +94,7 @@ class UserController
 
     public function getColumns()
     {
-        $columns = $this->database()->getColumns();
+        $columns = $this->user->getColumns();
 
         return $columns;
     }
@@ -109,7 +112,7 @@ class UserController
     {
         $username = $_SESSION['username'];
 
-        if ($this->database()->getUserAccess($username)) {
+        if ($this->user->getUserAccess($username)) {
             return true;
         }
     }
@@ -135,7 +138,7 @@ class UserController
     public function searchUsers($search)
     {
         if ($this->isAdmin()) {
-            $results = $this->database()->searchUsers($search);
+            $results = $this->user->searchUsers($search);
 
             foreach ($results as $result) {
                 return $result;
@@ -155,7 +158,7 @@ class UserController
             $newPassword2 = $_POST['confirm_pass'];
 
             if ($newPassword === $newPassword2) {
-                if ($this->database()->updateUserPassword($username, $dbPassword, $newPassword)) {
+                if ($this->user->updateUserPassword($username, $dbPassword, $newPassword)) {
                     GenerateViewWithMessage::renderView('success', 'Updated information successfully.');
                 } else {
                     GenerateViewWithMessage::renderView('error', 'Wrong password.');
@@ -172,7 +175,7 @@ class UserController
             $lastName = $_POST['last_name'];
             $dbPassword = $_POST['db_pass'];
 
-            if ($this->database()->updateUser($username, $dbPassword, $firstName, $lastName)) {
+            if ($this->user->updateUser($username, $dbPassword, $firstName, $lastName)) {
                 GenerateViewWithMessage::renderView('success', 'Updated information successfully.');
             } else {
                 GenerateViewWithMessage::renderView('error', 'Wrong password.');

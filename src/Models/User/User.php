@@ -1,35 +1,25 @@
 <?php
 
-namespace UserControlSkeleton\Models;
+namespace UserControlSkeleton\Models\User;
 
 use PDO;
+use UserControlSkeleton\Models\Database\Database;
 
-class Database
+class User
 {
-    public function connect()
-    {
-        $username = getenv('DATABASE_USER');
-        $password = getenv('DATABASE_PASS');
-        $host = getenv('DATABASE_HOST');
-        $port = getenv('DATABASE_PORT');
-        $name = getenv('DATABASE_NAME');
-        $driver = getenv('DATABASE_DRIVER');
+	protected $database;
 
-        try {
-            $link = new PDO($driver.':host='.$host.';port='.$port.';dbname='.$name.';charset=UTF8;', $username, $password);
-
-            return $link;
-        } catch (\PDOException $e) {
-            GenerateViewWithMessage::renderView('error', $e->getMessage());
-        }
-    }
+	public function __construct()
+	{
+		$this->database = new Database;
+	}
 
     public function createUser($username, $password, $fname, $lname, $user_group = '1')
     {
         $userPassword = $password;
         $encryptedPassword = password_hash($password, PASSWORD_BCRYPT);
 
-        $query = $this->connect();
+        $query = $this->database->connect();
 
         $query = $query->prepare('SELECT user FROM users WHERE user = :username');
         $query->bindParam(':username', $username);
@@ -39,7 +29,7 @@ class Database
             return false;
         }
 
-        $query = $this->connect();
+        $query = $this->database->connect();
 
         $query = $query->prepare('INSERT INTO users (user, password, first_name, last_name, user_group)
             VALUES (:username, :password, :first_name, :last_name, :user_group)');
@@ -55,7 +45,7 @@ class Database
 
     public function updateUser($username, $form_pass, $fname, $lname)
     {
-        $query = $this->connect();
+        $query = $this->database->connect();
 
         if ($this->comparePasswords($username, $form_pass)) {
             $query = $query->prepare('UPDATE users SET first_name = :first_name, last_name = :last_name WHERE user = :username');
@@ -70,7 +60,7 @@ class Database
 
     public function updateUserPassword($username, $currentPassword, $newPassword)
     {
-        $query = $this->connect();
+        $query = $this->database->connect();
 
         if ($this->comparePasswords($username, $currentPassword)) {
             $query = $query->prepare('UPDATE users SET password = :password WHERE user = :username');
@@ -86,7 +76,7 @@ class Database
 
     public function comparePasswords($username, $form_pass)
     {
-        $query = $this->connect();
+        $query = $this->database->connect();
 
         $query = $query->prepare('SELECT password FROM users WHERE user = :username');
         $query->bindParam(':username', $username);
@@ -110,7 +100,7 @@ class Database
         foreach ($searchTerms as $searchTerm) {
             $searchTerm = '%' . $searchTerm . '%';
 
-            $query = $this->connect();
+            $query = $this->database->connect();
 
             $query = $query->prepare('SELECT * FROM users WHERE user LIKE :search OR first_name LIKE :search OR last_name LIKE :search');
             $query->bindParam(":search", $searchTerm);
@@ -128,7 +118,7 @@ class Database
     {
         $results = [];
 
-        $query = $this->connect();
+        $query = $this->database->connect();
 
         $query = $query->prepare('SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
             WHERE TABLE_SCHEMA = "user_control_skeleton" AND TABLE_NAME = "users"');
@@ -143,7 +133,7 @@ class Database
 
     public function getUserInfo()
     {
-        $query = $this->connect();
+        $query = $this->database->connect();
 
         $username = $_SESSION['username'];
 
@@ -158,7 +148,7 @@ class Database
 
     public function getUserAccess($username)
     {
-        $query = $this->connect();
+        $query = $this->database->connect();
 
         $query = $query->prepare('SELECT user_group FROM users WHERE user = :username');
         $query->bindParam(':username', $username);
