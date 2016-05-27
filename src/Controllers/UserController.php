@@ -89,9 +89,7 @@ class UserController
 	public function getInfo()
 	{
 		if ($this->getLoginStatus()) {
-			$user = $this->user->getUserInfo();
-
-			return $user;
+			return $this->user->getUserInfo();
 		}
 
 		GenerateViewWithMessage::renderView('error', 'You must be logged in.');
