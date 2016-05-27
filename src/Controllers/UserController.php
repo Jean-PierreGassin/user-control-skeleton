@@ -83,6 +83,7 @@ class UserController
 
 	public function delete()
 	{
+		//TODO
 	}
 
 	public function getInfo()
