@@ -14,15 +14,14 @@ class User
 		$this->database = new Database;
 	}
 
-	public function createUser($username, $password, $fname, $lname, $user_group = '1')
+	public function createUser(array $formData, $userGroup = '1')
 	{
-		$userPassword = $password;
-		$encryptedPassword = password_hash($password, PASSWORD_BCRYPT);
+		$password = password_hash($formData['password'], PASSWORD_BCRYPT);
 
 		$query = $this->database->connect();
 
 		$query = $query->prepare('SELECT user FROM users WHERE user = :username');
-		$query->bindParam(':username', $username);
+		$query->bindParam(':username', $formData['username']);
 		$query->execute();
 
 		while ($field = $query->fetch(PDO::FETCH_ASSOC)) {
@@ -33,11 +32,11 @@ class User
 
 		$query = $query->prepare('INSERT INTO users (user, password, first_name, last_name, user_group)
 		VALUES (:username, :password, :first_name, :last_name, :user_group)');
-		$query->bindParam(':username', $username);
-		$query->bindParam(':password', $encryptedPassword);
-		$query->bindParam(':first_name', $fname);
-		$query->bindParam(':last_name', $lname);
-		$query->bindParam(':user_group', $user_group);
+		$query->bindParam(':username', $formData['username']);
+		$query->bindParam(':password', $password);
+		$query->bindParam(':first_name', $formData['first_name']);
+		$query->bindParam(':last_name', $formData['last_name']);
+		$query->bindParam(':user_group', $userGroup);
 		$query->execute();
 
 		return true;

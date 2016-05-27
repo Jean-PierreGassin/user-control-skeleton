@@ -35,10 +35,11 @@ class UserController
 			$_SESSION['username'] = $username;
 
 			header("Location: ../Account");
-		} else {
-			unset($_SESSION['logged_in']);
-			unset($_SESSION['username']);
+			return;
 		}
+
+		unset($_SESSION['logged_in']);
+		unset($_SESSION['username']);
 	}
 
 	public function logout()
@@ -52,31 +53,32 @@ class UserController
 
 	public function create()
 	{
-		if (empty($_POST['username']) || empty($_POST['password']) || empty($_POST['password_confirm']) || empty($_POST['first_name']) || empty($_POST['last_name'])) {
-			GenerateViewWithMessage::renderView('error', 'All fields are required.');
+		$formData = [
+			'username' => $_POST['username'],
+			'password' => $_POST['password'],
+			'password2' => $_POST['password_confirm'],
+			'first_name' => $_POST['first_name'],
+			'last_name' => $_POST['last_name']
+		];
 
-			return;
+		foreach ($formData as $post) {
+			if (empty($post)) {
+				GenerateViewWithMessage::renderView('error', 'All fields are required.');
+				return;
+			}
 		}
 
-		$username = $_POST['username'];
-		$password1 = $_POST['password'];
-		$password2 = $_POST['password_confirm'];
-		$firstName = $_POST['first_name'];
-		$lastName = $_POST['last_name'];
-
-		if ($password1 !== $password2) {
+		if ($formData['password'] !== $formData['password2']) {
 			GenerateViewWithMessage::renderView('error', 'Passwords do not match.');
-
 			return;
 		}
 
-		if (!$this->user->createUser($username, $password1, $firstName, $lastName)) {
+		if (!$this->user->createUser($formData)) {
 			GenerateViewWithMessage::renderView('error', 'Username already exists.');
-
 			return;
 		}
 
-		$this->authenticateUser($username, $password1);
+		$this->authenticateUser($formData['username'], $formData['password']);
 	}
 
 	public function delete()
