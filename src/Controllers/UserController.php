@@ -18,12 +18,11 @@ class UserController
 
 	public function login()
 	{
-		if (isset($_POST['login']) && !empty($_POST['username']) && !empty($_POST['password'])) {
+		if (!empty($_POST['username']) && !empty($_POST['password'])) {
 			$username = $_POST['username'];
 			$password = $_POST['password'];
 
 			$this->authenticateUser($username, $password);
-			header("Location: ../Account");
 		}
 
 		GenerateViewWithMessage::renderView('error', 'Incorrect login details.');
@@ -53,26 +52,31 @@ class UserController
 
 	public function create()
 	{
-		if (isset($_POST['register_user']) && !empty($_POST['username']) && !empty($_POST['password']) && !empty($_POST['password_confirm']) &&
-		!empty($_POST['first_name']) && !empty($_POST['last_name'])) {
-			$username = $_POST['username'];
-			$password1 = $_POST['password'];
-			$password2 = $_POST['password_confirm'];
-			$firstName = $_POST['first_name'];
-			$lastName = $_POST['last_name'];
+		if (empty($_POST['username']) || empty($_POST['password']) || empty($_POST['password_confirm']) || empty($_POST['first_name']) || empty($_POST['last_name'])) {
+			GenerateViewWithMessage::renderView('error', 'All fields are required.');
 
-			if ($password1 !== $password2) {
-				GenerateViewWithMessage::renderView('error', 'Passwords do not match.');
-
-				return;
-			}
-
-			if (!$this->user->createUser($username, $password1, $firstName, $lastName)) {
-				GenerateViewWithMessage::renderView('error', 'Username already exists.');
-			}
-
-			$this->authenticateUser($username, $password1);
+			return;
 		}
+
+		$username = $_POST['username'];
+		$password1 = $_POST['password'];
+		$password2 = $_POST['password_confirm'];
+		$firstName = $_POST['first_name'];
+		$lastName = $_POST['last_name'];
+
+		if ($password1 !== $password2) {
+			GenerateViewWithMessage::renderView('error', 'Passwords do not match.');
+
+			return;
+		}
+
+		if (!$this->user->createUser($username, $password1, $firstName, $lastName)) {
+			GenerateViewWithMessage::renderView('error', 'Username already exists.');
+
+			return;
+		}
+
+		$this->authenticateUser($username, $password1);
 	}
 
 	public function delete()

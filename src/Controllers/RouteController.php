@@ -8,11 +8,11 @@ use UserControlSkeleton\Models\GenerateViewWithMessage;
 
 class RouteController
 {
-	public function getRoute()
-	{
-		$route = $_SERVER['REQUEST_URI'];
+	protected $route;
 
-		return $this->route = $route;
+	public function __construct()
+	{
+		$this->route = $_SERVER['REQUEST_URI'];
 	}
 
 	public function switchView()
@@ -31,28 +31,40 @@ class RouteController
 			$user->updateUser();
 		}
 
-		if ($this->getRoute() === '/Logout') {
+		if ($this->route === '/Logout') {
 			$user->logout();
 		}
 
 		if ($user->getLoginStatus() && $user->isAdmin()) {
 			GenerateView::renderView('/AdminNavBar');
-		} else if ($user->getLoginStatus()) {
+		}
+
+		if ($user->getLoginStatus() && !$user->isAdmin()) {
 			GenerateView::renderView('/UserNavBar');
-		} else {
+		}
+
+		if (!$user->getLoginStatus()) {
 			GenerateView::renderView('/GuestNavBar');
 		}
 
-		if ($this->getRoute() === '/controlPanel' && !$user->isAdmin()) {
+		if ($this->route === '/controlPanel' && $user->isAdmin()) {
+			GenerateView::renderView($this->route);
+		}
+
+		if ($this->route === '/controlPanel' && !$user->isAdmin()) {
 			GenerateViewWithMessage::renderView('error', 'You are not authorized.');
 		}
 
-		if ($this->getRoute() === '/Account' && $user->getLoginStatus()) {
-			GenerateViewWithMessage::renderView($this->getRoute(), $user->getInfo());
+		if ($this->route === '/Account' && $user->getLoginStatus()) {
+			GenerateViewWithMessage::renderView($this->route, $user->getInfo());
 		}
 
-		if ($this->getRoute() === '/') {
-			GenerateView::renderView($this->getRoute());
+		if ($this->route === '/Register' && !$user->getLoginStatus()) {
+			GenerateView::renderView($this->route);
+		}
+
+		if ($this->route === '/') {
+			GenerateView::renderView($this->route);
 		}
 
 		if (isset($_POST['search_users'])) {
