@@ -11,7 +11,7 @@ class User
 
 	public function __construct()
 	{
-		$this->database = new Database;
+		$this->database = new Database();
 	}
 
 	public function isAdmin()
@@ -122,20 +122,16 @@ class User
 
 	public function searchUsers($searchTerms)
 	{
-		$searchTerms = explode(" ", $searchTerms);
 		$results = [];
 
-		foreach ($searchTerms as $searchTerm) {
-			$searchTerm = '%' . $searchTerm . '%';
-			$query = $this->database->connect();
+		$query = $this->database->connect();
+		$query = $query->prepare('SELECT * FROM users WHERE user LIKE ? OR first_name LIKE ? or last_name LIKE ?');
 
-			$query = $query->prepare('SELECT * FROM users WHERE user LIKE :search OR first_name LIKE :search OR last_name LIKE :search');
-			$query->bindParam(":search", $searchTerm);
-			$query->execute();
+		$params = array("%$searchTerms%", "%$searchTerms%", "%$searchTerms%");
+		$query->execute($params);
 
-			while ($user[] = $query->fetch(PDO::FETCH_ASSOC)) {
-				$results[] = $user;
-			}
+		while ($user[] = $query->fetch(PDO::FETCH_ASSOC)) {
+			$results[] = $user;
 		}
 
 		return $results;
