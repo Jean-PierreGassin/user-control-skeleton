@@ -102,11 +102,12 @@ class UserController
 
 	public function getLoginStatus()
 	{
-		if (isset($_SESSION['logged_in']) && isset($_SESSION['username'])) {
-			return true;
+		if (!isset($_SESSION['logged_in']) || !isset($_SESSION['username'])) {
+			unset($_SESSION['logged_in']);
+			return;
 		}
 
-		unset($_SESSION['logged_in']);
+		return true;
 	}
 
 	public function isAdmin()
