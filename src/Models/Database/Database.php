@@ -9,7 +9,7 @@ class Database
 	protected $user;
 
 	protected $pass;
-	
+
 	protected $host;
 
 	protected $port;
@@ -37,5 +37,20 @@ class Database
 		} catch (PDOException $e) {
 			GenerateViewWithMessage::renderView('error', $e->getMessage());
 		}
+	}
+
+	public function getColumns()
+	{
+		$results = [];
+		$query = $this->connect();
+		$query = $query->prepare('SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = "user_control_skeleton" AND TABLE_NAME = "users"');
+
+		$query->execute();
+
+		while ($column = $query->fetch(PDO::FETCH_ASSOC)) {
+			$results[] = $column;
+		}
+
+		return $results;
 	}
 }

@@ -17,7 +17,8 @@ class RouteController
 
 	public function switchView()
 	{
-		$user = new UserController;
+		$user = new UserController();
+		$admin = new AdminController();
 
 		if (isset($_POST['login'])) {
 			$user->login();
@@ -68,7 +69,7 @@ class RouteController
 		}
 
 		if (isset($_POST['search_users'])) {
-			GenerateViewWithMessage::renderView('UserTable', $user->searchUsers($_POST['search_field']), $user->getColumns());
+			GenerateViewWithMessage::renderView('UserTable', $admin->searchUsers($_POST['search_field']), $admin->getColumns());
 		}
 	}
 }

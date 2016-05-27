@@ -28,6 +28,28 @@ class UserController
 		GenerateViewWithMessage::renderView('error', 'Incorrect login details.');
 	}
 
+	public function getLoginStatus()
+	{
+		if (!isset($_SESSION['logged_in']) || !isset($_SESSION['username'])) {
+			unset($_SESSION['logged_in']);
+			return;
+		}
+
+		return true;
+	}
+
+	public function isAdmin()
+	{
+		if ($this->user->isAdmin()) {
+			return true;
+		}
+	}
+
+	public function getInfo()
+	{
+		return $this->user->getInfo();
+	}
+
 	public function authenticateUser($username, $password)
 	{
 		if ($this->user->comparePasswords($username, $password)) {
@@ -84,50 +106,6 @@ class UserController
 	public function delete()
 	{
 		//TODO
-	}
-
-	public function getInfo()
-	{
-		if ($this->getLoginStatus()) {
-			return $this->user->getUserInfo();
-		}
-
-		GenerateViewWithMessage::renderView('error', 'You must be logged in.');
-	}
-
-	public function getColumns()
-	{
-		return $this->user->getColumns();
-	}
-
-	public function getLoginStatus()
-	{
-		if (!isset($_SESSION['logged_in']) || !isset($_SESSION['username'])) {
-			unset($_SESSION['logged_in']);
-			return;
-		}
-
-		return true;
-	}
-
-	public function isAdmin()
-	{
-		$username = $_SESSION['username'];
-
-		if ($this->user->getUserAccess($username)) {
-			return true;
-		}
-	}
-
-	public function searchUsers($search)
-	{
-		if ($this->isAdmin()) {
-			$results = $this->user->searchUsers($search);
-
-			foreach ($results as $result) {
-				return $result;
-			}
-		}
 	}
 
 	public function updateUser()

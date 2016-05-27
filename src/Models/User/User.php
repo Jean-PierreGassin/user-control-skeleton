@@ -14,6 +14,36 @@ class User
 		$this->database = new Database;
 	}
 
+	public function isAdmin()
+	{
+		$username = $_SESSION['username'];
+		$query = $this->database->connect();
+
+		$query = $query->prepare('SELECT user_group FROM users WHERE user = :username');
+		$query->bindParam(':username', $username);
+		$query->execute();
+
+		while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+			if ($row['user_group'] == 2) {
+				return true;
+			}
+		}
+	}
+
+	public function getInfo()
+	{
+		$username = $_SESSION['username'];
+		$query = $this->database->connect();
+
+		$query = $query->prepare('SELECT * FROM users WHERE user = :username');
+		$query->bindParam(':username', $username);
+		$query->execute();
+
+		while ($user = $query->fetch(PDO::FETCH_ASSOC)) {
+			return $user;
+		}
+	}
+
 	public function createUser(array $formData, $userGroup = '1')
 	{
 		$password = password_hash($formData['password'], PASSWORD_BCRYPT);
@@ -93,12 +123,10 @@ class User
 	public function searchUsers($searchTerms)
 	{
 		$searchTerms = explode(" ", $searchTerms);
-
 		$results = [];
 
 		foreach ($searchTerms as $searchTerm) {
 			$searchTerm = '%' . $searchTerm . '%';
-
 			$query = $this->database->connect();
 
 			$query = $query->prepare('SELECT * FROM users WHERE user LIKE :search OR first_name LIKE :search OR last_name LIKE :search');
@@ -112,51 +140,4 @@ class User
 
 		return $results;
 	}
-
-	public function getColumns()
-	{
-		$results = [];
-
-		$query = $this->database->connect();
-
-		$query = $query->prepare('SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
-			WHERE TABLE_SCHEMA = "user_control_skeleton" AND TABLE_NAME = "users"');
-			$query->execute();
-
-			while ($column = $query->fetch(PDO::FETCH_ASSOC)) {
-				$results[] = $column;
-			}
-
-			return $results;
-		}
-
-		public function getUserInfo()
-		{
-			$query = $this->database->connect();
-
-			$username = $_SESSION['username'];
-
-			$query = $query->prepare('SELECT * FROM users WHERE user = :username');
-			$query->bindParam(':username', $username);
-			$query->execute();
-
-			while ($user = $query->fetch(PDO::FETCH_ASSOC)) {
-				return $user;
-			}
-		}
-
-		public function getUserAccess($username)
-		{
-			$query = $this->database->connect();
-
-			$query = $query->prepare('SELECT user_group FROM users WHERE user = :username');
-			$query->bindParam(':username', $username);
-			$query->execute();
-
-			while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-				if ($row['user_group'] == 2) {
-					return true;
-				}
-			}
-		}
-	}
+}
