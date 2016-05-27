@@ -97,9 +97,7 @@ class UserController
 
 	public function getColumns()
 	{
-		$columns = $this->user->getColumns();
-
-		return $columns;
+		return $this->user->getColumns();
 	}
 
 	public function getLoginStatus()
