@@ -4,7 +4,7 @@ namespace UserControlSkeleton\Models;
 
 class GenerateViewWithMessage
 {
-	public static function renderView($view, $message, $message2 = '')
+	public static function renderView($view, $message)
 	{
 		switch($view) {
 			case('/Account'):

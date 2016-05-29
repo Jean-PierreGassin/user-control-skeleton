@@ -72,7 +72,7 @@ class RouteController
 		}
 
 		if (isset($_POST['search_users'])) {
-			GenerateViewWithMessage::renderView('UserTable', $admin->searchUsers($_POST['search_field']), $admin->getColumns());
+			GenerateViewWithMessage::renderView('UserTable', $admin->searchUsers($_POST['search_field']));
 		}
 	}
 }
