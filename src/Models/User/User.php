@@ -26,9 +26,7 @@ class User
 
 		$row = $statement->fetch(PDO::FETCH_ASSOC);
 
-		if ($row['user_group'] == 2) {
-			return true;
-		}
+		return $row;
 	}
 
 	public function getInfo()
@@ -70,7 +68,9 @@ class User
 
 	public function updateUser($username, $password, $firstName, $lastName)
 	{
-		if (!$this->comparePasswords($username, $password)) {
+		$database = $this->user->getPassword($username);
+
+		if (!password_verify($password, $database['password'])) {
 			return;
 		}
 
@@ -82,20 +82,14 @@ class User
 		return true;
 	}
 
-	public function comparePasswords($username, $password)
+	public function getPassword($username)
 	{
 		$statement = $this->database->connect();
 		$statement = $statement->prepare('SELECT password FROM users WHERE user = ?');
 
 		$statement->execute([$username]);
 
-		$field = $statement->fetch(PDO::FETCH_ASSOC);
-
-		if (!password_verify($password, $field['password'])) {
-			return;
-		}
-
-		return true;
+		return $statement->fetch(PDO::FETCH_ASSOC);
 	}
 
 	public function searchUsers($searchTerms)

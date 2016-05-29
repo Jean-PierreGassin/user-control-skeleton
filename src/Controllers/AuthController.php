@@ -17,11 +17,26 @@ class AuthController
 	public function login(RequestController $request)
 	{
 		if (empty($request->data['username']) || empty($request->data['password'])) {
+			GenerateViewWithMessage::renderView('error', 'All fields are required.');
+
 			return;
 		}
 
-		$this->authenticateUser($request->data['username'], $request->data['password']);
-		GenerateViewWithMessage::renderView('error', 'Incorrect login details.');
+		$database = $this->user->getPassword($request->data['username']);
+
+		if (!password_verify($request->data['password'], $database['password'])) {
+			unset($_SESSION['logged_in']);
+			unset($_SESSION['username']);
+
+			GenerateViewWithMessage::renderView('error', 'Incorrect login details.');
+
+			return;
+		}
+
+		$_SESSION['logged_in'] = true;
+		$_SESSION['username'] = $request->data['username'];
+
+		header("Location: ../Account");
 	}
 
 	public function logout()
@@ -45,25 +60,12 @@ class AuthController
 
 	public function isAdmin()
 	{
-		if (!$this->user->isAdmin()) {
+		$row = $this->user->isAdmin();
+
+		if ($row['user_group'] != 2) {
 			return;
 		}
 
 		return true;
-	}
-
-	public function authenticateUser($username, $password)
-	{
-		if (!$this->user->comparePasswords($username, $password)) {
-			unset($_SESSION['logged_in']);
-			unset($_SESSION['username']);
-
-			return;
-		}
-
-		$_SESSION['logged_in'] = true;
-		$_SESSION['username'] = $username;
-
-		header("Location: ../Account");
 	}
 }
