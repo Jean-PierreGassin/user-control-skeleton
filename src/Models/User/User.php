@@ -18,14 +18,13 @@ class User
 	{
 		$username = $_SESSION['username'];
 		$statement = $this->database->connect();
-
 		$statement = $statement->prepare('SELECT user_group FROM users WHERE user = ?');
+
 		$statement->execute([$username]);
 
-		while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-			if ($row['user_group'] == 2) {
-				return true;
-			}
+		$row = $statement->fetch(PDO::FETCH_ASSOC);
+		if ($row['user_group'] == 2) {
+			return true;
 		}
 	}
 
