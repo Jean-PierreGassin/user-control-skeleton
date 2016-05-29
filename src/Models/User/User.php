@@ -77,11 +77,8 @@ class User
 		$query = $this->database->connect();
 
 		if ($this->comparePasswords($username, $form_pass)) {
-			$query = $query->prepare('UPDATE users SET first_name = :first_name, last_name = :last_name WHERE user = :username');
-			$query->bindParam(':first_name', $fname);
-			$query->bindParam(':last_name', $lname);
-			$query->bindParam(':username', $username);
-			$query->execute();
+			$query = $query->prepare('UPDATE users SET first_name = ?, last_name = ? WHERE user = ?');
+			$query->execute([$fname, $lname, $username]);
 
 			return true;
 		}

@@ -11,18 +11,25 @@ class UserController
 {
 	protected $user;
 
+	protected $formData;
+
 	public function __construct()
 	{
 		$this->user = new User();
+
+		$this->formData = [
+			'username' => $_POST['username'],
+			'password' => $_POST['password'],
+			'password2' => $_POST['password_confirm'],
+			'first_name' => $_POST['first_name'],
+			'last_name' => $_POST['last_name']
+		];
 	}
 
 	public function login()
 	{
-		if (!empty($_POST['username']) && !empty($_POST['password'])) {
-			$username = $_POST['username'];
-			$password = $_POST['password'];
-
-			$this->authenticateUser($username, $password);
+		if (!empty($this->formData['username']) && !empty($this->formData['password'])) {
+			$this->authenticateUser($this->formData['username'], $this->formData['password']);
 		}
 
 		GenerateViewWithMessage::renderView('error', 'Incorrect login details.');
@@ -75,32 +82,24 @@ class UserController
 
 	public function create()
 	{
-		$formData = [
-			'username' => $_POST['username'],
-			'password' => $_POST['password'],
-			'password2' => $_POST['password_confirm'],
-			'first_name' => $_POST['first_name'],
-			'last_name' => $_POST['last_name']
-		];
-
-		foreach ($formData as $post) {
+		foreach ($this->formData as $post) {
 			if (empty($post)) {
 				GenerateViewWithMessage::renderView('error', 'All fields are required.');
 				return;
 			}
 		}
 
-		if ($formData['password'] !== $formData['password2']) {
+		if ($this->formData['password'] !== $this->formData['password2']) {
 			GenerateViewWithMessage::renderView('error', 'Passwords do not match.');
 			return;
 		}
 
-		if (!$this->user->createUser($formData)) {
+		if (!$this->user->createUser($this->formData)) {
 			GenerateViewWithMessage::renderView('error', 'Username already exists.');
 			return;
 		}
 
-		$this->authenticateUser($formData['username'], $formData['password']);
+		$this->authenticateUser($this->formData['username'], $this->formData['password']);
 	}
 
 	public function delete()
@@ -110,38 +109,33 @@ class UserController
 
 	public function updateUser()
 	{
-		if (isset($_POST['update_user']) && !empty($_POST['first_name']) && !empty($_POST['last_name']) && !empty($_POST['db_pass']) &&
-		!empty($_POST['new_pass']) && !empty($_POST['confirm_pass'])) {
-			$username = $_SESSION['username'];
-			$firstName = $_POST['first_name'];
-			$lastName = $_POST['last_name'];
-			$dbPassword = $_POST['db_pass'];
-			$newPassword = $_POST['new_pass'];
-			$newPassword2 = $_POST['confirm_pass'];
+		$formData[] = [
+			'current_password' => $_POST['current_password']
+		];
 
-			if ($newPassword === $newPassword2) {
-				if ($this->user->updateUserPassword($username, $dbPassword, $newPassword)) {
-					GenerateViewWithMessage::renderView('success', 'Updated information successfully.');
-				} else {
-					GenerateViewWithMessage::renderView('error', 'Wrong password.');
-				}
-			} else {
-				GenerateViewWithMessage::renderView('error', 'Passwords do not match.');
-			}
-		}
-
-		if (isset($_POST['update_user']) && !empty($_POST['first_name']) && !empty($_POST['last_name']) && !empty($_POST['db_pass']) &&
-		empty($_POST['new_pass'])) {
-			$username = $_SESSION['username'];
-			$firstName = $_POST['first_name'];
-			$lastName = $_POST['last_name'];
-			$dbPassword = $_POST['db_pass'];
-
-			if ($this->user->updateUser($username, $dbPassword, $firstName, $lastName)) {
+		if (isset($_POST['update_user']) && !empty($this->formData['first_name']) && !empty($this->formData['last_name']) && !empty($_POST['current_password']) && empty($this->formData['password'])) {
+			if ($this->user->updateUser($this->formData['username'], $this->formData['current_password'], $this->formData['first_name'], $this->formData['last_name'])) {
 				GenerateViewWithMessage::renderView('success', 'Updated information successfully.');
 			} else {
 				GenerateViewWithMessage::renderView('error', 'Wrong password.');
 			}
+		}
+
+		foreach ($this->formData as $post) {
+			if (empty($post)) {
+				GenerateViewWithMessage::renderView('error', 'All fields are required.');
+				return;
+			}
+
+			if ($this->user->updateUserPassword($this->formData['username'], $_POST['current_password'], $this->formData['password'])) {
+				GenerateViewWithMessage::renderView('success', 'Updated information successfully.');
+				return;
+			} else {
+				GenerateViewWithMessage::renderView('error', 'Wrong password.');
+			}
+
+			GenerateViewWithMessage::renderView('error', 'Passwords do not match.');
+			return;
 		}
 	}
 }

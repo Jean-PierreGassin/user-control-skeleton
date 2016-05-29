@@ -12,14 +12,14 @@
 	</div>
 	<div class="small-6 columns">
 		New Password:<br/>
-		<input type="password" name="new_pass" maxlength="20"/>
+		<input type="password" name="password" maxlength="20"/>
 	</div>
 	<div class="small-6 columns">
 		Confirm Password:<br/>
-		<input type="password" name="confirm_pass" maxlength="20"/>
+		<input type="password" name="password_confirm" maxlength="20"/>
 	</div>
 	<div class="small-6 columns">
-		<input type="password" placeholder="Current Password" name="db_pass" maxlength="20" required/>
+		<input type="password" placeholder="Current Password" name="current_password" maxlength="20" required/>
 	</div>
 	<div class="small-6 columns">
 		<button class="postfix" type="submit" name="update_user">Update</button>
