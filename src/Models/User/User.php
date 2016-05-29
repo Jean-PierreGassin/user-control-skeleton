@@ -68,7 +68,7 @@ class User
 
 	public function updateUser($username, $password, $firstName, $lastName)
 	{
-		$database = $this->user->getPassword($username);
+		$database = $this->getPassword($username);
 
 		if (!password_verify($password, $database['password'])) {
 			return;
