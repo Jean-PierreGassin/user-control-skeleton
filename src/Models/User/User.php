@@ -17,13 +17,12 @@ class User
 	public function isAdmin()
 	{
 		$username = $_SESSION['username'];
-		$query = $this->database->connect();
+		$statement = $this->database->connect();
 
-		$query = $query->prepare('SELECT user_group FROM users WHERE user = :username');
-		$query->bindParam(':username', $username);
-		$query->execute();
+		$statement = $statement->prepare('SELECT user_group FROM users WHERE user = ?');
+		$statement->execute([$username]);
 
-		while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+		while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
 			if ($row['user_group'] == 2) {
 				return true;
 			}
@@ -33,13 +32,12 @@ class User
 	public function getInfo()
 	{
 		$username = $_SESSION['username'];
-		$query = $this->database->connect();
+		$statement = $this->database->connect();
 
-		$query = $query->prepare('SELECT * FROM users WHERE user = :username');
-		$query->bindParam(':username', $username);
-		$query->execute();
+		$statement = $statement->prepare('SELECT * FROM users WHERE user = ?');
+		$statement->execute([$username]);
 
-		while ($user = $query->fetch(PDO::FETCH_ASSOC)) {
+		while ($user = $statement->fetch(PDO::FETCH_ASSOC)) {
 			return $user;
 		}
 	}
@@ -48,37 +46,37 @@ class User
 	{
 		$password = password_hash($request['password'], PASSWORD_BCRYPT);
 
-		$query = $this->database->connect();
+		$statement = $this->database->connect();
 
-		$query = $query->prepare('SELECT user FROM users WHERE user = :username');
-		$query->bindParam(':username', $request['username']);
-		$query->execute();
+		$statement = $statement->prepare('SELECT user FROM users WHERE user = ?');
+		$statement->execute($request['username']);
 
-		while ($field = $query->fetch(PDO::FETCH_ASSOC)) {
+		while ($field = $statement->fetch(PDO::FETCH_ASSOC)) {
 			return false;
 		}
 
-		$query = $this->database->connect();
+		$statement = $this->database->connect();
+		$statement = $statement->prepare('INSERT INTO users (user, password, first_name, last_name, user_group)
+		VALUES (?, ?, ?, ?, ?)');
 
-		$query = $query->prepare('INSERT INTO users (user, password, first_name, last_name, user_group)
-		VALUES (:username, :password, :first_name, :last_name, :user_group)');
-		$query->bindParam(':username', $request['username']);
-		$query->bindParam(':password', $password);
-		$query->bindParam(':first_name', $request['first_name']);
-		$query->bindParam(':last_name', $request['last_name']);
-		$query->bindParam(':user_group', $userGroup);
-		$query->execute();
+		$statement->execute([
+			$request['username'],
+			$password,
+			$request['first_name'],
+			$request['last_name'],
+			$userGroup
+		]);
 
 		return true;
 	}
 
 	public function updateUser($username, $form_pass, $fname, $lname)
 	{
-		$query = $this->database->connect();
+		$statement = $this->database->connect();
 
 		if ($this->comparePasswords($username, $form_pass)) {
-			$query = $query->prepare('UPDATE users SET first_name = ?, last_name = ? WHERE user = ?');
-			$query->execute([$fname, $lname, $username]);
+			$statement = $statement->prepare('UPDATE users SET first_name = ?, last_name = ? WHERE user = ?');
+			$statement->execute([$fname, $lname, $username]);
 
 			return true;
 		}
@@ -86,13 +84,12 @@ class User
 
 	public function comparePasswords($username, $form_pass)
 	{
-		$query = $this->database->connect();
+		$statement = $this->database->connect();
 
-		$query = $query->prepare('SELECT password FROM users WHERE user = :username');
-		$query->bindParam(':username', $username);
-		$query->execute();
+		$statement = $statement->prepare('SELECT password FROM users WHERE user = ?');
+		$statement->execute([$username]);
 
-		while ($field = $query->fetch(PDO::FETCH_ASSOC)) {
+		while ($field = $statement->fetch(PDO::FETCH_ASSOC)) {
 			foreach ($field as $db_password) {
 				if (password_verify($form_pass, $db_password)) {
 					return true;
@@ -105,13 +102,13 @@ class User
 	{
 		$results = [];
 
-		$query = $this->database->connect();
-		$query = $query->prepare('SELECT * FROM users WHERE user LIKE ? OR first_name LIKE ? or last_name LIKE ?');
+		$statement = $this->database->connect();
+		$statement = $statement->prepare('SELECT * FROM users WHERE user LIKE ? OR first_name LIKE ? or last_name LIKE ?');
 
 		$params = array("%$searchTerms%", "%$searchTerms%", "%$searchTerms%");
-		$query->execute($params);
+		$statement->execute($params);
 
-		while ($user[] = $query->fetch(PDO::FETCH_ASSOC)) {
+		while ($user[] = $statement->fetch(PDO::FETCH_ASSOC)) {
 			$results[] = $user;
 		}
 
