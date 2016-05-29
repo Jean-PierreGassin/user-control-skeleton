@@ -4,6 +4,7 @@ namespace UserControlSkeleton\Controllers;
 
 use UserControlSkeleton\Models\GenerateView;
 use UserControlSkeleton\Controllers\UserController;
+use UserControlSkeleton\Controllers\AuthController;
 use UserControlSkeleton\Models\GenerateViewWithMessage;
 
 class RouteController
@@ -18,49 +19,51 @@ class RouteController
 	public function switchView()
 	{
 		$user = new UserController();
+		$auth = new AuthController();
 		$admin = new AdminController();
+		$request = new RequestController();
 
 		if (isset($_POST['login'])) {
-			$user->login();
+			$auth->login($request);
 		}
 
 		if (isset($_POST['register_user'])) {
-			$user->create();
+			$user->create($request);
 		}
 
 		if (isset($_POST['update_user'])) {
-			$user->updateUser();
+			$user->updateUser($request);
 		}
 
 		if ($this->route === '/Logout') {
-			$user->logout();
+			$auth->logout();
 		}
 
-		if ($user->getLoginStatus() && $user->isAdmin()) {
+		if ($auth->getLoginStatus() && $auth->isAdmin()) {
 			GenerateView::renderView('/AdminNavBar');
 		}
 
-		if ($user->getLoginStatus() && !$user->isAdmin()) {
+		if ($auth->getLoginStatus() && !$auth->isAdmin()) {
 			GenerateView::renderView('/UserNavBar');
 		}
 
-		if (!$user->getLoginStatus()) {
+		if (!$auth->getLoginStatus()) {
 			GenerateView::renderView('/GuestNavBar');
 		}
 
-		if ($this->route === '/controlPanel' && $user->isAdmin()) {
+		if ($this->route === '/controlPanel' && $auth->isAdmin()) {
 			GenerateView::renderView($this->route);
 		}
 
-		if ($this->route === '/controlPanel' && !$user->isAdmin()) {
+		if ($this->route === '/controlPanel' && !$auth->isAdmin()) {
 			GenerateViewWithMessage::renderView('error', 'You are not authorized.');
 		}
 
-		if ($this->route === '/Account' && $user->getLoginStatus()) {
+		if ($this->route === '/Account' && $auth->getLoginStatus()) {
 			GenerateViewWithMessage::renderView($this->route, $user->getInfo());
 		}
 
-		if ($this->route === '/Register' && !$user->getLoginStatus()) {
+		if ($this->route === '/Register' && !$auth->getLoginStatus()) {
 			GenerateView::renderView($this->route);
 		}
 

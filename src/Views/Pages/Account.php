@@ -1,6 +1,6 @@
 <form method="POST" class="large-4 large-centered columns">
 	<div class="large-12 columns">
-		<input disabled type="text" value="<?php echo $message['user'] ?> " name="username" maxlength="20"/>
+		<input readonly type="text" value="<?php echo $message['user'] ?> " name="username" maxlength="20"/>
 	</div>
 	<div class="small-12 columns">
 		First name:<br/>
@@ -12,7 +12,7 @@
 	</div>
 	<div class="small-6 columns">
 		New Password:<br/>
-		<input type="password" name="password" maxlength="20"/>
+		<input type="password" name="new_password" maxlength="20"/>
 	</div>
 	<div class="small-6 columns">
 		Confirm Password:<br/>

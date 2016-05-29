@@ -44,14 +44,14 @@ class User
 		}
 	}
 
-	public function createUser(array $formData, $userGroup = '1')
+	public function createUser($request, $userGroup = '1')
 	{
-		$password = password_hash($formData['password'], PASSWORD_BCRYPT);
+		$password = password_hash($request['password'], PASSWORD_BCRYPT);
 
 		$query = $this->database->connect();
 
 		$query = $query->prepare('SELECT user FROM users WHERE user = :username');
-		$query->bindParam(':username', $formData['username']);
+		$query->bindParam(':username', $request['username']);
 		$query->execute();
 
 		while ($field = $query->fetch(PDO::FETCH_ASSOC)) {
@@ -62,10 +62,10 @@ class User
 
 		$query = $query->prepare('INSERT INTO users (user, password, first_name, last_name, user_group)
 		VALUES (:username, :password, :first_name, :last_name, :user_group)');
-		$query->bindParam(':username', $formData['username']);
+		$query->bindParam(':username', $request['username']);
 		$query->bindParam(':password', $password);
-		$query->bindParam(':first_name', $formData['first_name']);
-		$query->bindParam(':last_name', $formData['last_name']);
+		$query->bindParam(':first_name', $request['first_name']);
+		$query->bindParam(':last_name', $request['last_name']);
 		$query->bindParam(':user_group', $userGroup);
 		$query->execute();
 
@@ -79,22 +79,6 @@ class User
 		if ($this->comparePasswords($username, $form_pass)) {
 			$query = $query->prepare('UPDATE users SET first_name = ?, last_name = ? WHERE user = ?');
 			$query->execute([$fname, $lname, $username]);
-
-			return true;
-		}
-	}
-
-	public function updateUserPassword($username, $currentPassword, $newPassword)
-	{
-		$query = $this->database->connect();
-
-		if ($this->comparePasswords($username, $currentPassword)) {
-			$query = $query->prepare('UPDATE users SET password = :password WHERE user = :username');
-			$newPassword = password_hash($newPassword, PASSWORD_BCRYPT);
-
-			$query->bindParam(':username', $username);
-			$query->bindParam(':password', $newPassword);
-			$query->execute();
 
 			return true;
 		}

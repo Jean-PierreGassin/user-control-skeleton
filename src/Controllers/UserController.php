@@ -6,50 +6,16 @@ use UserControlSkeleton\Models\User\User;
 use UserControlSkeleton\Models\Database\Database;
 use UserControlSkeleton\Models\GenerateView;
 use UserControlSkeleton\Models\GenerateViewWithMessage;
+use UserControlSkeleton\Controllers\AuthController;
 
 class UserController
 {
 	protected $user;
 
-	protected $formData;
-
 	public function __construct()
 	{
 		$this->user = new User();
-
-		$this->formData = [
-			'username' => $_POST['username'],
-			'password' => $_POST['password'],
-			'password2' => $_POST['password_confirm'],
-			'first_name' => $_POST['first_name'],
-			'last_name' => $_POST['last_name']
-		];
-	}
-
-	public function login()
-	{
-		if (!empty($this->formData['username']) && !empty($this->formData['password'])) {
-			$this->authenticateUser($this->formData['username'], $this->formData['password']);
-		}
-
-		GenerateViewWithMessage::renderView('error', 'Incorrect login details.');
-	}
-
-	public function getLoginStatus()
-	{
-		if (!isset($_SESSION['logged_in']) || !isset($_SESSION['username'])) {
-			unset($_SESSION['logged_in']);
-			return;
-		}
-
-		return true;
-	}
-
-	public function isAdmin()
-	{
-		if ($this->user->isAdmin()) {
-			return true;
-		}
+		$this->auth = new AuthController();
 	}
 
 	public function getInfo()
@@ -57,81 +23,51 @@ class UserController
 		return $this->user->getInfo();
 	}
 
-	public function authenticateUser($username, $password)
+	public function create(RequestController $request)
 	{
-		if ($this->user->comparePasswords($username, $password)) {
-			$_SESSION['logged_in'] = true;
-			$_SESSION['username'] = $username;
-
-			header("Location: ../Account");
-			return;
-		}
-
-		unset($_SESSION['logged_in']);
-		unset($_SESSION['username']);
-	}
-
-	public function logout()
-	{
-		unset($_SESSION['logged_in']);
-		unset($_SESSION['username']);
-
-		session_destroy();
-		header("Location: ../");
-	}
-
-	public function create()
-	{
-		foreach ($this->formData as $post) {
-			if (empty($post)) {
+		foreach ($request as $field) {
+			if (empty($field)) {
 				GenerateViewWithMessage::renderView('error', 'All fields are required.');
 				return;
 			}
 		}
 
-		if ($this->formData['password'] !== $this->formData['password2']) {
+		if ($request->data['password'] !== $request->data['password_confirm']) {
 			GenerateViewWithMessage::renderView('error', 'Passwords do not match.');
 			return;
 		}
 
-		if (!$this->user->createUser($this->formData)) {
+		if (!$this->user->createUser($request->data)) {
 			GenerateViewWithMessage::renderView('error', 'Username already exists.');
 			return;
 		}
 
-		$this->authenticateUser($this->formData['username'], $this->formData['password']);
+		$this->auth->authenticateUser($request->data['username'], $request->data['password']);
 	}
 
-	public function delete()
+	public function updateUser(RequestController $request)
 	{
-		//TODO
-	}
+		$username = $request->data['username'] ? $request->data['username'] : false;
+		$firstName = $request->data['first_name'] ? $request->data['first_name'] : false;
+		$lastName = $request->data['last_name'] ? $request->data['last_name'] : false;
+		$currentPassword = $request->data['current_password'] ? $request->data['current_password'] : false;
+		$newPassword = $request->data['new_password'] ? $request->data['new_password'] : false;
+		$confirmPassword = $request->data['password_confirm'] ? $request->data['password_confirm'] : false;
 
-	public function updateUser()
-	{
-		$formData[] = [
-			'current_password' => $_POST['current_password']
-		];
-
-		if (isset($_POST['update_user']) && !empty($this->formData['first_name']) && !empty($this->formData['last_name']) && !empty($_POST['current_password']) && empty($this->formData['password'])) {
-			if ($this->user->updateUser($this->formData['username'], $this->formData['current_password'], $this->formData['first_name'], $this->formData['last_name'])) {
-				GenerateViewWithMessage::renderView('success', 'Updated information successfully.');
-			} else {
-				GenerateViewWithMessage::renderView('error', 'Wrong password.');
-			}
-		}
-
-		foreach ($this->formData as $post) {
-			if (empty($post)) {
+		foreach ($request->data as $field) {
+			if (empty($field)) {
 				GenerateViewWithMessage::renderView('error', 'All fields are required.');
 				return;
 			}
 
-			if ($this->user->updateUserPassword($this->formData['username'], $_POST['current_password'], $this->formData['password'])) {
-				GenerateViewWithMessage::renderView('success', 'Updated information successfully.');
-				return;
-			} else {
-				GenerateViewWithMessage::renderView('error', 'Wrong password.');
+			if ($username && $firstName && $lastName && $currentPassword) {
+				if ($this->user->updateUser($username, $currentPassword, $firstName, $lastName)) {
+					GenerateViewWithMessage::renderView('success', 'Updated information successfully.');
+					return;
+				} else {
+					GenerateViewWithMessage::renderView('error', 'Wrong password.');
+					return;
+				}
 			}
 
 			GenerateViewWithMessage::renderView('error', 'Passwords do not match.');

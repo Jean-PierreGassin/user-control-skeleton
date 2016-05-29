@@ -19,11 +19,6 @@ class AdminController
 		$this->database = new Database();
 	}
 
-	public function delete()
-	{
-		//TODO
-	}
-
 	public function getColumns()
 	{
 		return $this->database->getColumns();
@@ -38,5 +33,10 @@ class AdminController
 				return $result;
 			}
 		}
+	}
+
+	public function deleteUser()
+	{
+		//TODO
 	}
 }
