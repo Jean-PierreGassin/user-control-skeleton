@@ -3,8 +3,6 @@
 namespace UserControlSkeleton\Controllers;
 
 use UserControlSkeleton\Models\User\User;
-use UserControlSkeleton\Models\Database\Database;
-use UserControlSkeleton\Models\GenerateView;
 use UserControlSkeleton\Models\GenerateViewWithMessage;
 
 class AuthController
@@ -18,10 +16,11 @@ class AuthController
 
 	public function login(RequestController $request)
 	{
-		if (!empty($request->data['username']) && !empty($request->data['password'])) {
-			$this->authenticateUser($request->data['username'], $request->data['password']);
+		if (empty($request->data['username']) || empty($request->data['password'])) {
+			return;
 		}
 
+		$this->authenticateUser($request->data['username'], $request->data['password']);
 		GenerateViewWithMessage::renderView('error', 'Incorrect login details.');
 	}
 
@@ -46,22 +45,25 @@ class AuthController
 
 	public function isAdmin()
 	{
-		if ($this->user->isAdmin()) {
-			return true;
+		if (!$this->user->isAdmin()) {
+			return;
 		}
+
+		return true;
 	}
 
 	public function authenticateUser($username, $password)
 	{
-		if ($this->user->comparePasswords($username, $password)) {
-			$_SESSION['logged_in'] = true;
-			$_SESSION['username'] = $username;
+		if (!$this->user->comparePasswords($username, $password)) {
+			unset($_SESSION['logged_in']);
+			unset($_SESSION['username']);
 
-			header("Location: ../Account");
 			return;
 		}
 
-		unset($_SESSION['logged_in']);
-		unset($_SESSION['username']);
+		$_SESSION['logged_in'] = true;
+		$_SESSION['username'] = $username;
+
+		header("Location: ../Account");
 	}
 }

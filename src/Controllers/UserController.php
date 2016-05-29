@@ -3,10 +3,10 @@
 namespace UserControlSkeleton\Controllers;
 
 use UserControlSkeleton\Models\User\User;
-use UserControlSkeleton\Models\Database\Database;
 use UserControlSkeleton\Models\GenerateView;
-use UserControlSkeleton\Models\GenerateViewWithMessage;
+use UserControlSkeleton\Models\Database\Database;
 use UserControlSkeleton\Controllers\AuthController;
+use UserControlSkeleton\Models\GenerateViewWithMessage;
 
 class UserController
 {
@@ -47,12 +47,12 @@ class UserController
 
 	public function updateUser(RequestController $request)
 	{
-		$username = $request->data['username'] ? $request->data['username'] : false;
-		$firstName = $request->data['first_name'] ? $request->data['first_name'] : false;
-		$lastName = $request->data['last_name'] ? $request->data['last_name'] : false;
-		$currentPassword = $request->data['current_password'] ? $request->data['current_password'] : false;
-		$newPassword = $request->data['new_password'] ? $request->data['new_password'] : false;
-		$confirmPassword = $request->data['password_confirm'] ? $request->data['password_confirm'] : false;
+		$username = isset($request->data['username']) ? $request->data['username'] : false;
+		$firstName = isset($request->data['first_name']) ? $request->data['first_name'] : false;
+		$lastName = isset($request->data['last_name']) ? $request->data['last_name'] : false;
+		$currentPassword = isset($request->data['current_password']) ? $request->data['current_password'] : false;
+		$newPassword = isset($request->data['new_password']) ? $request->data['new_password'] : false;
+		$confirmPassword = isset($request->data['password_confirm']) ? $request->data['password_confirm'] : false;
 
 		foreach ($request->data as $field) {
 			if (empty($field)) {
