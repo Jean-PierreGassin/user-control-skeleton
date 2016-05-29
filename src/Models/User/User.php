@@ -9,20 +9,23 @@ class User
 {
 	protected $database;
 
+	protected $username;
+
 	public function __construct()
 	{
 		$this->database = new Database();
+		$this->username = isset($_SESSION['username']) ? $_SESSION['username'] : false;
 	}
 
 	public function isAdmin()
 	{
-		$username = $_SESSION['username'];
 		$statement = $this->database->connect();
 		$statement = $statement->prepare('SELECT user_group FROM users WHERE user = ?');
 
-		$statement->execute([$username]);
+		$statement->execute([$this->username]);
 
 		$row = $statement->fetch(PDO::FETCH_ASSOC);
+
 		if ($row['user_group'] == 2) {
 			return true;
 		}
@@ -30,28 +33,24 @@ class User
 
 	public function getInfo()
 	{
-		$username = $_SESSION['username'];
 		$statement = $this->database->connect();
-
 		$statement = $statement->prepare('SELECT * FROM users WHERE user = ?');
-		$statement->execute([$username]);
 
-		while ($user = $statement->fetch(PDO::FETCH_ASSOC)) {
-			return $user;
-		}
+		$statement->execute([$this->username]);
+
+		return $statement->fetch(PDO::FETCH_ASSOC);;
 	}
 
 	public function createUser($request, $userGroup = '1')
 	{
 		$password = password_hash($request['password'], PASSWORD_BCRYPT);
-
 		$statement = $this->database->connect();
-
 		$statement = $statement->prepare('SELECT user FROM users WHERE user = ?');
+
 		$statement->execute($request['username']);
 
 		while ($field = $statement->fetch(PDO::FETCH_ASSOC)) {
-			return false;
+			return;
 		}
 
 		$statement = $this->database->connect();
@@ -69,38 +68,39 @@ class User
 		return true;
 	}
 
-	public function updateUser($username, $form_pass, $fname, $lname)
+	public function updateUser($username, $password, $firstName, $lastName)
 	{
-		$statement = $this->database->connect();
-
-		if ($this->comparePasswords($username, $form_pass)) {
-			$statement = $statement->prepare('UPDATE users SET first_name = ?, last_name = ? WHERE user = ?');
-			$statement->execute([$fname, $lname, $username]);
-
-			return true;
+		if (!$this->comparePasswords($username, $password)) {
+			return;
 		}
+
+		$statement = $this->database->connect();
+		$statement = $statement->prepare('UPDATE users SET first_name = ?, last_name = ? WHERE user = ?');
+
+		$statement->execute([$firstName, $lastName, $username]);
+
+		return true;
 	}
 
-	public function comparePasswords($username, $form_pass)
+	public function comparePasswords($username, $password)
 	{
 		$statement = $this->database->connect();
-
 		$statement = $statement->prepare('SELECT password FROM users WHERE user = ?');
+
 		$statement->execute([$username]);
 
-		while ($field = $statement->fetch(PDO::FETCH_ASSOC)) {
-			foreach ($field as $db_password) {
-				if (password_verify($form_pass, $db_password)) {
-					return true;
-				}
-			}
+		$field = $statement->fetch(PDO::FETCH_ASSOC);
+
+		if (!password_verify($password, $field['password'])) {
+			return;
 		}
+
+		return true;
 	}
 
 	public function searchUsers($searchTerms)
 	{
 		$results = [];
-
 		$statement = $this->database->connect();
 		$statement = $statement->prepare('SELECT * FROM users WHERE user LIKE ? OR first_name LIKE ? or last_name LIKE ?');
 
