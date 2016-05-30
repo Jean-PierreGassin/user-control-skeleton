@@ -7,23 +7,17 @@ use UserControlSkeleton\Models\Database\MySQLDatabase;
 
 class AdminController
 {
-	protected $user;
-
-	protected $database;
-
-	public function __construct()
-	{
-		$this->user = new User();
-		$this->database = new MySQLDatabase();
-	}
-
 	public function getColumns()
 	{
+		$database = new MySQLDatabase();
+
 		return $this->database->getColumns();
 	}
 
 	public function searchUsers($search)
 	{
+		$user =  new User();
+
 		if (!$this->user->isAdmin()) {
 			return;
 		}
