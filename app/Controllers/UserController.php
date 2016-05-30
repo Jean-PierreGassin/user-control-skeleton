@@ -25,9 +25,9 @@ class UserController
 
 	public function create(RequestController $request)
 	{
-		$request = $request->data;
+		$requests = $request->data;
 
-		foreach ($request as $field) {
+		foreach ($requests as $field) {
 			if (!isset($field)) {
 				GenerateViewWithMessage::renderView('error', 'All fields are required.');
 
@@ -35,19 +35,19 @@ class UserController
 			}
 		}
 
-		if ($request['password'] !== $request['password_confirm']) {
+		if ($requests['password'] !== $requests['password_confirm']) {
 			GenerateViewWithMessage::renderView('error', 'Passwords do not match.');
 
 			return;
 		}
 
-		if (!$this->user->createUser($request)) {
+		if (!$this->user->createUser($requests)) {
 			GenerateViewWithMessage::renderView('error', 'Username already exists.');
 
 			return;
 		}
 
-		$this->auth->authenticateUser($request['username'], $request['password']);
+		$this->auth->login($request);
 	}
 
 	public function updateUser(RequestController $request)

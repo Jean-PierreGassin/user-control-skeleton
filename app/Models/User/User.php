@@ -45,7 +45,7 @@ class User
 		$statement = $this->database->connect();
 		$statement = $statement->prepare('SELECT user FROM users WHERE user = ?');
 
-		$statement->execute($request['username']);
+		$statement->execute([$request['username']]);
 
 		while ($field = $statement->fetch(PDO::FETCH_ASSOC)) {
 			return;
