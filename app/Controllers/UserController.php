@@ -25,64 +25,63 @@ class UserController
 
 	public function create(RequestController $request)
 	{
+		$request = $request->data;
+
 		foreach ($request as $field) {
-			if (empty($field)) {
+			if (!isset($field)) {
 				GenerateViewWithMessage::renderView('error', 'All fields are required.');
 
 				return;
 			}
 		}
 
-		if ($request->data['password'] !== $request->data['password_confirm']) {
+		if ($request['password'] !== $request['password_confirm']) {
 			GenerateViewWithMessage::renderView('error', 'Passwords do not match.');
 
 			return;
 		}
 
-		if (!$this->user->createUser($request->data)) {
+		if (!$this->user->createUser($request)) {
 			GenerateViewWithMessage::renderView('error', 'Username already exists.');
 
 			return;
 		}
 
-		$this->auth->authenticateUser($request->data['username'], $request->data['password']);
+		$this->auth->authenticateUser($request['username'], $request['password']);
 	}
 
 	public function updateUser(RequestController $request)
 	{
-		$username = isset($request->data['username']) ? $request->data['username'] : false;
-		$firstName = isset($request->data['first_name']) ? $request->data['first_name'] : false;
-		$lastName = isset($request->data['last_name']) ? $request->data['last_name'] : false;
-		$currentPassword = isset($request->data['current_password']) ? $request->data['current_password'] : false;
-		$newPassword = isset($request->data['new_password']) ? $request->data['new_password'] : false;
-		$confirmPassword = isset($request->data['password_confirm']) ? $request->data['password_confirm'] : false;
+		$request = $request->data;
 
-		foreach ($request->data as $field) {
-			if (empty($field)) {
+		foreach ($request as $field) {
+			if (!isset($field)) {
 				GenerateViewWithMessage::renderView('error', 'All fields are required.');
 
 				return;
 			}
+		}
 
-			if (!$username || !$firstName || !$lastName || !$currentPassword) {
-				GenerateViewWithMessage::renderView('error', 'All fields are required.');
-
-				return;
-			}
-
-			if ($this->user->updateUser($username, $currentPassword, $firstName, $lastName)) {
-				GenerateViewWithMessage::renderView('success', 'Updated information successfully.');
-
-				return;
-			} else {
-				GenerateViewWithMessage::renderView('error', 'Wrong password.');
-
-				return;
-			}
-
-			GenerateViewWithMessage::renderView('error', 'Passwords do not match.');
+		if (empty($request['first_name']) || empty($request['last_name'])) {
+			GenerateViewWithMessage::renderView('error', 'First name and last name are required.');
 
 			return;
 		}
+
+		if ($this->user->updateUser($request['username'], $request['current_password'], $request['first_name'], $request['last_name'])) {
+			GenerateViewWithMessage::renderView('success', 'Updated information successfully.');
+
+			return;
+		} else {
+			GenerateViewWithMessage::renderView('error', 'Wrong password.');
+
+			return;
+		}
+
+		//TODO Add the ability to update password
+
+		GenerateViewWithMessage::renderView('error', 'Passwords do not match.');
+
+		return;
 	}
 }
