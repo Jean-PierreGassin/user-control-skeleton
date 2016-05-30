@@ -24,12 +24,14 @@ class AdminController
 
 	public function searchUsers($search)
 	{
-		if ($this->user->isAdmin()) {
-			$results = $this->user->searchUsers($search);
+		if (!$this->user->isAdmin()) {
+			return;
+		}
 
-			foreach ($results as $result) {
-				return $result;
-			}
+		$results = $this->user->searchUsers($search);
+
+		foreach ($results as $result) {
+			return $result;
 		}
 	}
 
