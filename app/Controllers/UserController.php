@@ -29,20 +29,20 @@ class UserController
 
 		foreach ($requests as $field) {
 			if (!isset($field)) {
-				GenerateViewWithMessage::renderView('error', 'All fields are required.');
+				GenerateViewWithMessage::render('error', 'All fields are required.');
 
 				return;
 			}
 		}
 
 		if ($requests['password'] !== $requests['password_confirm']) {
-			GenerateViewWithMessage::renderView('error', 'Passwords do not match.');
+			GenerateViewWithMessage::render('error', 'Passwords do not match.');
 
 			return;
 		}
 
-		if (!$this->user->createUser($requests)) {
-			GenerateViewWithMessage::renderView('error', 'Username already exists.');
+		if (!$this->user->create($requests)) {
+			GenerateViewWithMessage::render('error', 'Username already exists.');
 
 			return;
 		}
@@ -50,38 +50,49 @@ class UserController
 		$this->auth->login($request);
 	}
 
-	public function updateUser(RequestController $request)
+	public function update(RequestController $request)
 	{
 		$request = $request->data;
 
 		foreach ($request as $field) {
 			if (!isset($field)) {
-				GenerateViewWithMessage::renderView('error', 'All fields are required.');
+				GenerateViewWithMessage::render('error', 'All fields are required.');
 
 				return;
 			}
 		}
 
 		if (empty($request['first_name']) || empty($request['last_name'])) {
-			GenerateViewWithMessage::renderView('error', 'First name and last name are required.');
+			GenerateViewWithMessage::render('error', 'First name and last name are required.');
 
 			return;
 		}
 
-		if ($this->user->updateUser($request['username'], $request['current_password'], $request['first_name'], $request['last_name'])) {
-			GenerateViewWithMessage::renderView('success', 'Updated information successfully.');
+		if ($this->user->update($request['username'], $request['current_password'], $request['first_name'], $request['last_name'])) {
+			GenerateViewWithMessage::render('success', 'Updated information successfully.');
 
 			return;
 		} else {
-			GenerateViewWithMessage::renderView('error', 'Wrong password.');
+			GenerateViewWithMessage::render('error', 'Wrong password.');
 
 			return;
 		}
 
 		//TODO Add the ability to update password
 
-		GenerateViewWithMessage::renderView('error', 'Passwords do not match.');
+		GenerateViewWithMessage::render('error', 'Passwords do not match.');
 
 		return;
+	}
+
+	public function isLoggedIn()
+	{
+		if (!isset($_SESSION['logged_in']) || !isset($_SESSION['username'])) {
+			unset($_SESSION['logged_in']);
+
+			return;
+		}
+
+		return true;
 	}
 }

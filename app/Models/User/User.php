@@ -17,29 +17,7 @@ class User
 		$this->username = isset($_SESSION['username']) ? $_SESSION['username'] : false;
 	}
 
-	public function isAdmin()
-	{
-		$statement = $this->database->connect();
-		$statement = $statement->prepare('SELECT user_group FROM users WHERE user = ?');
-
-		$statement->execute([$this->username]);
-
-		$row = $statement->fetch(PDO::FETCH_ASSOC);
-
-		return $row;
-	}
-
-	public function getInfo()
-	{
-		$statement = $this->database->connect();
-		$statement = $statement->prepare('SELECT * FROM users WHERE user = ?');
-
-		$statement->execute([$this->username]);
-
-		return $statement->fetch(PDO::FETCH_ASSOC);;
-	}
-
-	public function createUser($request, $userGroup = '1')
+	public function create($request, $userGroup = '1')
 	{
 		$password = password_hash($request['password'], PASSWORD_BCRYPT);
 		$statement = $this->database->connect();
@@ -66,7 +44,7 @@ class User
 		return true;
 	}
 
-	public function updateUser($username, $password, $firstName, $lastName)
+	public function update($username, $password, $firstName, $lastName)
 	{
 		$database = $this->getPassword($username);
 
@@ -82,6 +60,28 @@ class User
 		return true;
 	}
 
+	public function isAdmin()
+	{
+		$statement = $this->database->connect();
+		$statement = $statement->prepare('SELECT user_group FROM users WHERE user = ?');
+
+		$statement->execute([$this->username]);
+
+		$row = $statement->fetch(PDO::FETCH_ASSOC);
+
+		return $row;
+	}
+
+	public function getInfo()
+	{
+		$statement = $this->database->connect();
+		$statement = $statement->prepare('SELECT * FROM users WHERE user = ?');
+
+		$statement->execute([$this->username]);
+
+		return $statement->fetch(PDO::FETCH_ASSOC);;
+	}
+
 	public function getPassword($username)
 	{
 		$statement = $this->database->connect();
@@ -92,7 +92,7 @@ class User
 		return $statement->fetch(PDO::FETCH_ASSOC);
 	}
 
-	public function searchUsers($searchTerms)
+	public function search($searchTerms)
 	{
 		$results = [];
 		$statement = $this->database->connect();

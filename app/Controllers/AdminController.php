@@ -18,11 +18,11 @@ class AdminController
 	{
 		$user =  new User();
 
-		if (!$this->user->isAdmin()) {
+		if (!$user->isAdmin()) {
 			return;
 		}
 
-		$results = $this->user->searchUsers($search);
+		$results = $user->search($search);
 
 		foreach ($results as $result) {
 			return $result;

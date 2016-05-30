@@ -4,7 +4,7 @@ namespace UserControlSkeleton\Models;
 
 class GenerateView
 {
-	public static function renderView($view)
+	public static function render($view)
 	{
 		switch($view) {
 			case('/'):
