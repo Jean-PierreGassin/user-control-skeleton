@@ -16,15 +16,17 @@ class AuthController
 
 	public function login(RequestController $request)
 	{
-		if (empty($request->data['username']) || empty($request->data['password'])) {
+		$request = $request->data;
+
+		if (empty($request['username']) || empty($request['password'])) {
 			GenerateViewWithMessage::renderView('error', 'All fields are required.');
 
 			return;
 		}
 
-		$database = $this->user->getPassword($request->data['username']);
+		$database = $this->user->getPassword($request['username']);
 
-		if (!password_verify($request->data['password'], $database['password'])) {
+		if (!password_verify($request['password'], $database['password'])) {
 			unset($_SESSION['logged_in']);
 			unset($_SESSION['username']);
 
@@ -34,7 +36,7 @@ class AuthController
 		}
 
 		$_SESSION['logged_in'] = true;
-		$_SESSION['username'] = $request->data['username'];
+		$_SESSION['username'] = $request['username'];
 
 		header("Location: ../Account");
 	}
