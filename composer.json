@@ -1,7 +1,7 @@
 {
 	"autoload": {
 		"psr-4": {
-			"UserControlSkeleton\\": "src/"
+			"UserControlSkeleton\\": "app/"
 		}
 	},
 	"require": {

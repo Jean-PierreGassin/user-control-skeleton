@@ -1,11 +1,11 @@
 # User Control Skeleton
 
-A basic login system skeleton which was created for the sole purpose of educational learning and understanding - it includes installation and access control groups.
+A basic user control skeleton which was created for the sole purpose of personal development.
 
 ## Requirements
 
-  * MySQL
-  * PHP 5+ (untested in previous versions)
+  * A MySQL Database (currently tested on MySQL)
+  * PHP 5.4+ (untested in previous versions)
   * [bower](http://bower.io): `npm install bower -g`
 
 ## Quickstart
