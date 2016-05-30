@@ -11,9 +11,9 @@ A basic login system skeleton which was created for the sole purpose of educatio
 ## Quickstart
 
   * Clone this repo into your web server
-  * Composer/bower install
+  * composer/bower install
   * Re-name 'env.example' to '.env'
-  * Create a 'user_control_skeleton'
+  * Create a 'user_control_skeleton' table
   * Run the following SQL:
 
   ```

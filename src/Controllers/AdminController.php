@@ -3,7 +3,7 @@
 namespace UserControlSkeleton\Controllers;
 
 use UserControlSkeleton\Models\User\User;
-use UserControlSkeleton\Models\Database\Database;
+use UserControlSkeleton\Models\Database\MySQLDatabase;
 
 class AdminController
 {
@@ -14,7 +14,7 @@ class AdminController
 	public function __construct()
 	{
 		$this->user = new User();
-		$this->database = new Database();
+		$this->database = new MySQLDatabase();
 	}
 
 	public function getColumns()

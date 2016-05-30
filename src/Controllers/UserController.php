@@ -4,7 +4,7 @@ namespace UserControlSkeleton\Controllers;
 
 use UserControlSkeleton\Models\User\User;
 use UserControlSkeleton\Models\GenerateView;
-use UserControlSkeleton\Models\Database\Database;
+use UserControlSkeleton\Models\Database\MySQLDatabase;
 use UserControlSkeleton\Controllers\AuthController;
 use UserControlSkeleton\Models\GenerateViewWithMessage;
 

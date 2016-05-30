@@ -3,7 +3,7 @@
 namespace UserControlSkeleton\Models\User;
 
 use PDO;
-use UserControlSkeleton\Models\Database\Database;
+use UserControlSkeleton\Models\Database\MySQLDatabase;
 
 class User
 {
@@ -13,7 +13,7 @@ class User
 
 	public function __construct()
 	{
-		$this->database = new Database();
+		$this->database = new MySQLDatabase();
 		$this->username = isset($_SESSION['username']) ? $_SESSION['username'] : false;
 	}
 
