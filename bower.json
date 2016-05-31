@@ -1,8 +1,20 @@
 {
-  "name": "foundation-compass-app",
-  "version": "0.0.1",
-  "private": "true",
+  "name": "user-control-skeleton",
+  "homepage": "https://github.com/Jean-PierreGassin/user-control-skeleton",
+  "authors": [
+    "jeanpierre.gassin@gmail.com <jeanpierre.gassin@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
   "dependencies": {
-    "foundation": "zurb/bower-foundation#^5.5.3"
+    "foundation-sites": "^6.2.3"
   }
 }

@@ -1,0 +1,23 @@
+{
+  "name": "user-control-skeleton",
+  "version": "1.0.0",
+  "description": "A basic user control skeleton which was created for the sole purpose of personal development.",
+  "dependencies": {
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^3.1.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-load-plugins": "^1.2.4",
+    "gulp-sass": "^2.3.1"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jean-PierreGassin/user-control-skeleton.git"
+  },
+  "author": "Jean-Pierre Gassin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Jean-PierreGassin/user-control-skeleton/issues"
+  },
+  "homepage": "https://github.com/Jean-PierreGassin/user-control-skeleton#readme"
+}

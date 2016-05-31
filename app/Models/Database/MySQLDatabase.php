@@ -35,8 +35,9 @@ class MySQLDatabase implements DatabaseInterface
 			$link = new PDO($this->driver.':host='.$this->host.';port='.$this->port.';dbname='.$this->name.';charset=UTF8;', $this->user, $this->pass);
 
 			return $link;
-		} catch (PDOException $e) {
-			GenerateViewWithMessage::renderView('error', $e->getMessage());
+		} catch (\PDOException $e) {
+			echo $e->getMessage();
+			die();
 		}
 	}
 
