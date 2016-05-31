@@ -3,6 +3,6 @@ $(document).ready(function() {
 	$(document).foundation();
 
 	setInterval(function() {
-		$('.alert-box').slideUp(1500);
-	}, 2000);
+		$('.callout').slideUp(1500);
+	}, 4000);
 }());

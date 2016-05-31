@@ -28,7 +28,7 @@ class UserController
 		$requests = $request->data;
 
 		foreach ($requests as $field) {
-			if (!isset($field)) {
+			if (empty($field)) {
 				GenerateViewWithMessage::render('error', 'All fields are required.');
 
 				return;
@@ -55,7 +55,7 @@ class UserController
 		$request = $request->data;
 
 		foreach ($request as $field) {
-			if (!isset($field)) {
+			if (empty($field)) {
 				GenerateViewWithMessage::render('error', 'All fields are required.');
 
 				return;

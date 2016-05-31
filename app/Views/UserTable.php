@@ -1,24 +1,26 @@
 <?php if (isset($message)): ?>
-<div class="row">
-	<table class="small-12 columns">
-		<thead>
-			<tr>
-				<?php foreach ($message as $columns): ?>
-					<?php foreach($columns as $key => $value): ?>
-						<th><?php echo $key ?></th>
-					<?php endforeach ?>
-				<?php endforeach ?>
-			</tr>
-		</thead>
-		<tbody>
-			<?php foreach ($message as $users): ?>
+<div class="row align-center">
+	<div class="small-12 columns">
+		<table class="hover" style="table-layout: fixed">
+			<thead>
 				<tr>
-					<?php foreach ($users as $user): ?>
-						<td><?php echo $user ?></td>
+					<?php foreach ($message as $columns): ?>
+						<?php foreach($columns as $key => $value): ?>
+							<th><?php echo $key ?></th>
+						<?php endforeach ?>
 					<?php endforeach ?>
 				</tr>
-			<?php endforeach ?>
-		</tbody>
-	</table>
+			</thead>
+			<tbody>
+				<?php foreach ($message as $users): ?>
+					<tr>
+						<?php foreach ($users as $user): ?>
+							<td style="overflow: hidden;"><?php echo $user ?></td>
+						<?php endforeach ?>
+					</tr>
+				<?php endforeach ?>
+			</tbody>
+		</table>
+	</div>
 </div>
 <?php endif ?>
