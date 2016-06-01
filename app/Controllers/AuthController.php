@@ -21,10 +21,11 @@ class AuthController
 
 	public function login(Requests $request)
 	{
+		$view = new GenerateView();
 		$request = $request->data;
 
 		if (empty($request['username']) || empty($request['password'])) {
-			(new GenerateView)->render('error', 'All fields are required.');
+			$view->render('error', 'All fields are required.');
 
 			return;
 		}
@@ -35,7 +36,7 @@ class AuthController
 			unset($_SESSION['logged_in']);
 			unset($_SESSION['username']);
 
-			(new GenerateView)->render('error', 'Incorrect login details.');
+			$view->render('error', 'Incorrect login details.');
 
 			return;
 		}

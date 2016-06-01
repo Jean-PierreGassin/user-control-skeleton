@@ -17,24 +17,25 @@ class UserController
 
 	public function create(Requests $request)
 	{
+		$view = new GenerateView();
 		$requests = $request->data;
 
 		foreach ($requests as $field) {
 			if (empty($field)) {
-				(new GenerateView)->render('error', 'All fields are required.');
+				$view->render('error', 'All fields are required.');
 
 				return;
 			}
 		}
 
 		if ($requests['password'] !== $requests['password_confirm']) {
-			(new GenerateView)->render('error', 'Passwords do not match.');
+			$view->render('error', 'Passwords do not match.');
 
 			return;
 		}
 
 		if (!(new User)->create($requests)) {
-			(new GenerateView)->render('error', 'Username already exists.');
+			$view->render('error', 'Username already exists.');
 
 			return;
 		}
@@ -44,27 +45,28 @@ class UserController
 
 	public function update(Requests $request)
 	{
+		$view = new GenerateView();
 		$request = $request->data;
 
 		if (empty($request['first_name']) || empty($request['last_name'])) {
-			(new GenerateView)->render('error', 'First name and last name are required.');
+			$view->render('error', 'First name and last name are required.');
 
 			return;
 		}
 
 		if ((new User)->update($request['username'], $request['current_password'], $request['first_name'], $request['last_name'])) {
-			(new GenerateView)->render('success', 'Updated information successfully.');
+			$view->render('success', 'Updated information successfully.');
 
 			return;
 		} else {
-			(new GenerateView)->render('error', 'Wrong password.');
+			$view->render('error', 'Wrong password.');
 
 			return;
 		}
 
 		//TODO Add the ability to update password
 
-		(new GenerateView)->render('error', 'Passwords do not match.');
+		$view->render('error', 'Passwords do not match.');
 
 		return;
 	}
