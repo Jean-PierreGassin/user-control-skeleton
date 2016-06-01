@@ -1,7 +1,7 @@
 <?php if (isset($message)): ?>
 <div class="row align-center">
 	<div class="small-12 columns">
-		<table class="hover" style="table-layout: fixed">
+		<table class="hover stack" style="table-layout: fixed">
 			<thead>
 				<tr>
 					<?php foreach ($message as $columns): ?>
@@ -15,7 +15,7 @@
 				<?php foreach ($message as $users): ?>
 					<tr>
 						<?php foreach ($users as $user): ?>
-							<td style="overflow: hidden;"><?php echo $user ?></td>
+							<td class="table-scroll"><?php echo $user ?></td>
 						<?php endforeach ?>
 					</tr>
 				<?php endforeach ?>
