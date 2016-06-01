@@ -12,12 +12,7 @@ class GenerateViewWithMessage
 	{
 		switch($view) {
 			case('/Account'):
-			$this->view = [
-				'../app/Views/Header.php',
-				'../app/Views/Pages/Account.php',
-				'../app/Views/Footer.php'
-			];
-
+			$this->view = '../app/Views/Pages/Account.php';
 			$this->message = $message;
 
 			return $this;
@@ -42,18 +37,10 @@ class GenerateViewWithMessage
 
 	public function now()
 	{
-		if (!is_array($this->view)) {
-			$message = $this->message;
+		$message = $this->message;
 
-			include_once $this->view;
-
-			return;
-		}
-
-		foreach ($this->view as $view) {
-			$message = $this->message;
-
-			include_once $view;
-		}
+		include_once '../app/Views/Header.php';
+		include_once $this->view;
+		include_once '../app/Views/Footer.php';
 	}
 }
