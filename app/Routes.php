@@ -2,6 +2,7 @@
 
 namespace UserControlSkeleton;
 
+use UserControlSkeleton\Models\User\User;
 use UserControlSkeleton\Models\GenerateView;
 use UserControlSkeleton\Controllers\AdminController;
 use UserControlSkeleton\Controllers\UserController;
@@ -55,7 +56,7 @@ class Routes
 		}
 
 		if ($this->route === '/Account' && (new UserController)->isLoggedIn()) {
-			(new GenerateView)->render($this->route, (new UserController)->getInfo())->now();
+			(new GenerateView)->render($this->route, (new User)->getInfo())->now();
 		}
 
 		if ($this->route === '/Register' && !(new UserController)->isLoggedIn()) {

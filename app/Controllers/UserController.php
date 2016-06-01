@@ -10,11 +10,6 @@ use UserControlSkeleton\Models\Database\MySQLDatabase;
 
 class UserController
 {
-	public function getInfo()
-	{
-		return (new User)->getInfo();
-	}
-
 	public function create(Requests $request)
 	{
 		$view = new GenerateView();
