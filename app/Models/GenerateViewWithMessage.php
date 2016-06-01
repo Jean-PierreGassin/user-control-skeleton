@@ -8,19 +8,19 @@ class GenerateViewWithMessage
 	{
 		switch($view) {
 			case('/Account'):
-				return include('../Views/Pages/Account.php');
+				return include('../app/Views/Pages/Account.php');
 				break;
 
 			case('UserTable'):
-				return include('../Views/UserTable.php');
+				return include('../app/Views/UserTable.php');
 				break;
 
 			case('error'):
-				return include('../Views/Messages/Error.php');
+				return include('../app/Views/Messages/Error.php');
 				break;
 
 			case('success'):
-				return include('../Views/Messages/Success.php');
+				return include('../app/Views/Messages/Success.php');
 				break;
 		}
 	}

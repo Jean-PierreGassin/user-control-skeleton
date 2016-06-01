@@ -1,3 +1,3 @@
-<div class="medium-6 text-center columns">
+<div class="medium-12 text-center">
 	<div class="success callout"><?php echo $message ?></div>
 </div>

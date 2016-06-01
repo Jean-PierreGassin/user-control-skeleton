@@ -54,14 +54,6 @@ class UserController
 	{
 		$request = $request->data;
 
-		foreach ($request as $field) {
-			if (empty($field)) {
-				GenerateViewWithMessage::render('error', 'All fields are required.');
-
-				return;
-			}
-		}
-
 		if (empty($request['first_name']) || empty($request['last_name'])) {
 			GenerateViewWithMessage::render('error', 'First name and last name are required.');
 

@@ -18,52 +18,47 @@ class RouteController
 
 	public function switchView()
 	{
-		$user = new UserController();
-		$auth = new AuthController();
-		$admin = new AdminController();
-		$request = new RequestController();
-
 		if (isset($_POST['login'])) {
-			$auth->login($request);
+			(new AuthController)->login((new RequestController));
 		}
 
 		if (isset($_POST['register_user'])) {
-			$user->create($request);
+			(new UserController)->create((new RequestController));
 		}
 
 		if (isset($_POST['update_user'])) {
-			$user->update($request);
+			(new UserController)->update((new RequestController));
 		}
 
 		if ($this->route === '/Logout') {
-			$auth->logout();
+			(new AuthController)->logout();
 		}
 
-		if ($user->isLoggedIn() && $auth->isAdmin()) {
+		if ((new UserController)->isLoggedIn() && (new AuthController)->isAdmin()) {
 			GenerateView::render('/AdminNavBar');
 		}
 
-		if ($user->isLoggedIn() && !$auth->isAdmin()) {
+		if ((new UserController)->isLoggedIn() && !(new AuthController)->isAdmin()) {
 			GenerateView::render('/UserNavBar');
 		}
 
-		if (!$user->isLoggedIn()) {
+		if (!(new UserController)->isLoggedIn()) {
 			GenerateView::render('/GuestNavBar');
 		}
 
-		if ($this->route === '/controlPanel' && $auth->isAdmin()) {
+		if ($this->route === '/controlPanel' && (new AuthController)->isAdmin()) {
 			GenerateView::render($this->route);
 		}
 
-		if ($this->route === '/controlPanel' && !$auth->isAdmin()) {
+		if ($this->route === '/controlPanel' && !(new AuthController)->isAdmin()) {
 			GenerateViewWithMessage::render('error', 'You are not authorized.');
 		}
 
-		if ($this->route === '/Account' && $user->isLoggedIn()) {
-			GenerateViewWithMessage::render($this->route, $user->getInfo());
+		if ($this->route === '/Account' && (new UserController)->isLoggedIn()) {
+			GenerateViewWithMessage::render($this->route, (new UserController)->getInfo());
 		}
 
-		if ($this->route === '/Register' && !$user->isLoggedIn()) {
+		if ($this->route === '/Register' && !(new UserController)->isLoggedIn()) {
 			GenerateView::render($this->route);
 		}
 
@@ -72,7 +67,7 @@ class RouteController
 		}
 
 		if (isset($_POST['search_users'])) {
-			GenerateViewWithMessage::render('UserTable', $admin->searchUsers($_POST['search_field']));
+			GenerateViewWithMessage::render('UserTable', (new AdminController)->searchUsers($_POST['search_field']));
 		}
 	}
 }
