@@ -4,10 +4,17 @@ namespace UserControlSkeleton;
 
 class Requests
 {
-	public $data;
+	protected $data;
 
 	public function __construct()
 	{
-		$this->data = $_POST;
+		foreach ($_POST as $key => $value) {
+			$this->data[$key] = $value;
+		}
+	}
+
+	public function get($field)
+	{
+		return $this->data[$field];
 	}
 }
