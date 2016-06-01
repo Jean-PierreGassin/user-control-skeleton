@@ -13,9 +13,8 @@ class UserController
 	public function create(Requests $request)
 	{
 		$view = new GenerateView();
-		$requests = $request->data;
 
-		foreach ($requests as $field) {
+		foreach ($request as $field) {
 			if (empty($field)) {
 				$view->render('error', 'All fields are required');
 
@@ -23,13 +22,13 @@ class UserController
 			}
 		}
 
-		if ($requests['password'] !== $requests['password_confirm']) {
+		if ($request->get('password') !== $request->get('password_confirm')) {
 			$view->render('error', 'Passwords do not match');
 
 			return;
 		}
 
-		if (!(new User)->create($requests)) {
+		if (!(new User)->create($request)) {
 			$view->render('error', 'Username already exists');
 
 			return;
@@ -41,15 +40,14 @@ class UserController
 	public function update(Requests $request)
 	{
 		$view = new GenerateView();
-		$request = $request->data;
 
-		if (empty($request['first_name']) || empty($request['last_name'])) {
+		if (empty($request->get('first_name')) || empty($request->get('last_name'))) {
 			$view->render('error', 'First name and last name are required');
 
 			return;
 		}
 
-		if ((new User)->update($request['username'], $request['current_password'], $request['first_name'], $request['last_name'])) {
+		if ((new User)->update($request->get('username'), $request->get('current_password'), $request->get('first_name'), $request->get('last_name'))) {
 			$view->render('success', 'Updated information successfully');
 
 			return;
