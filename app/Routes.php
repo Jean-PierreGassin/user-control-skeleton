@@ -19,15 +19,15 @@ class Routes
 
 	public function switchView()
 	{
-		if (isset($_POST['login'])) {
+		if ($_POST && $this->route === '/') {
 			(new AuthController)->login((new Requests));
 		}
 
-		if (isset($_POST['register_user'])) {
+		if ($_POST && $this->route === '/Register') {
 			(new UserController)->create((new Requests));
 		}
 
-		if (isset($_POST['update_user'])) {
+		if ($_POST && $this->route === '/Account') {
 			(new UserController)->update((new Requests));
 		}
 
@@ -67,7 +67,7 @@ class Routes
 			(new GenerateView)->render($this->route)->now();
 		}
 
-		if (isset($_POST['search_users'])) {
+		if ($_POST && $this->route === '/controlPanel') {
 			(new GenerateView)
 				->render('UserTable', (new AdminController)
 				->searchUsers($_POST['search_field']))

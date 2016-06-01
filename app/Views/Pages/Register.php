@@ -42,7 +42,7 @@
 					<input type="text" placeholder="Last Name" name="last_name" maxlength="20">
 				</div>
 				<div class="small-12 columns">
-					<input class="button" type="submit" name="register_user" value="Register">
+					<input class="button" type="submit" value="Register">
 				</div>
 			</div>
 		</form>

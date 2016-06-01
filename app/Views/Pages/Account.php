@@ -46,7 +46,7 @@
 			</div>
 			<div class="small-12 columns">
 				<input type="password" placeholder="Current Password" name="current_password" maxlength="20" required>
-				<button class="button" type="submit" name="update_user">Update</button>
+				<button class="button" type="submit">Update</button>
 			</div>
 		</div>
 	</form>
