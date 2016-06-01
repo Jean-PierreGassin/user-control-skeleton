@@ -2,21 +2,15 @@
 
 namespace UserControlSkeleton\Controllers;
 
+use UserControlSkeleton\Requests;
 use UserControlSkeleton\Models\User\User;
 use UserControlSkeleton\Models\GenerateViewWithMessage;
 
 class AuthController
 {
-	protected $user;
-
-	public function __construct()
-	{
-		$this->user = new User();
-	}
-
 	public function isAdmin()
 	{
-		$user = $this->user->isAdmin();
+		$user = (new User)->isAdmin();
 
 		if ($user['user_group'] != 2) {
 			return;
@@ -25,23 +19,23 @@ class AuthController
 		return true;
 	}
 
-	public function login(RequestController $request)
+	public function login(Requests $request)
 	{
 		$request = $request->data;
 
 		if (empty($request['username']) || empty($request['password'])) {
-			GenerateViewWithMessage::render('error', 'All fields are required.');
+			(new GenerateViewWithMessage)->render('error', 'All fields are required.');
 
 			return;
 		}
 
-		$database = $this->user->getPassword($request['username']);
+		$database = (new User)->getPassword($request['username']);
 
 		if (!password_verify($request['password'], $database['password'])) {
 			unset($_SESSION['logged_in']);
 			unset($_SESSION['username']);
 
-			GenerateViewWithMessage::render('error', 'Incorrect login details.');
+			(new GenerateViewWithMessage)->render('error', 'Incorrect login details.');
 
 			return;
 		}

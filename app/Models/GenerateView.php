@@ -4,36 +4,80 @@ namespace UserControlSkeleton\Models;
 
 class GenerateView
 {
-	public static function render($view)
+	protected $view;
+
+	public function render($view)
 	{
 		switch($view) {
 			case('/'):
-				return include('../app/Views/Pages/Home.php');
-				break;
+			$this->view = [
+				'../app/Views/Header.php',
+				'../app/Views/Pages/Home.php',
+				'../app/Views/Footer.php'
+			];
+
+			return $this;
 
 			case('/UserNavBar'):
-				return include('../app/Views/Navigation/UserNavBar.php');
-				break;
+			$this->view = [
+				'../app/Views/Header.php',
+				'../app/Views/Navigation/UserNavBar.php',
+				'../app/Views/Footer.php'
+			];
+
+			return $this;
 
 			case('/GuestNavBar'):
-				return include('../app/Views/Navigation/GuestNavBar.php');
-				break;
+			$this->view = [
+				'../app/Views/Header.php',
+				'../app/Views/Navigation/GuestNavBar.php',
+				'../app/Views/Footer.php'
+			];
+
+			return $this;
 
 			case('/AdminNavBar'):
-				return include('../app/Views/Navigation/AdminNavBar.php');
-				break;
+			$this->view = [
+				'../app/Views/Header.php',
+				'../app/Views/Navigation/AdminNavBar.php',
+				'../app/Views/Footer.php'
+			];
+
+			return $this;
 
 			case('/Register'):
-				return include('../app/Views/Pages/Register.php');
-				break;
+			$this->view = [
+				'../app/Views/Header.php',
+				'../app/Views/Pages/Register.php',
+				'../app/Views/Footer.php'
+			];
+
+			return $this;
 
 			case('/controlPanel'):
-				return include('../app/Views/Pages/ControlPanel.php');
-				break;
+			$this->view = [
+				'../app/Views/Header.php',
+				'../app/Views/Pages/ControlPanel.php',
+				'../app/Views/Footer.php'
+			];
+
+			return $this;
 
 			default:
-				return include('../app/Views/Pages/Home.php');
-				break;
+			$this->view = [
+				'../app/Views/Header.php',
+				'../app/Views/Pages/Home.php',
+				'../app/Views/Footer.php'
+			];
+
+			return $this;
+		}
+	}
+
+	public function now()
+	{
+		foreach ($this->view as $view) {
+			include_once $view;
 		}
 	}
 }

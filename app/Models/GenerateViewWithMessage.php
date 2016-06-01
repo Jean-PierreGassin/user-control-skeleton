@@ -4,24 +4,56 @@ namespace UserControlSkeleton\Models;
 
 class GenerateViewWithMessage
 {
-	public static function render($view, $message)
+	protected $view;
+
+	protected $message;
+
+	public function render($view, $message)
 	{
 		switch($view) {
 			case('/Account'):
-				return include('../app/Views/Pages/Account.php');
-				break;
+			$this->view = [
+				'../app/Views/Header.php',
+				'../app/Views/Pages/Account.php',
+				'../app/Views/Footer.php'
+			];
+
+			$this->message = $message;
+
+			return $this;
 
 			case('UserTable'):
-				return include('../app/Views/UserTable.php');
-				break;
+			$this->view = '../app/Views/Admin/UserTable.php';
+			$this->message = $message;
+
+			return $this;
 
 			case('error'):
-				return include('../app/Views/Messages/Error.php');
-				break;
+			$_SESSION['error'] = $message;
+
+			return;
 
 			case('success'):
-				return include('../app/Views/Messages/Success.php');
-				break;
+			$_SESSION['success'] = $message;
+
+			return;
+		}
+	}
+
+	public function now()
+	{
+		if (!is_array($this->view)) {
+			$message = $this->message;
+
+			include_once $this->view;
+
+			return;
+		}
+
+		foreach ($this->view as $view) {
+			$message = $this->message;
+
+			include_once $view;
 		}
 	}
 }

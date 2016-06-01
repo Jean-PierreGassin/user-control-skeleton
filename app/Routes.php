@@ -1,13 +1,14 @@
 <?php
 
-namespace UserControlSkeleton\Controllers;
+namespace UserControlSkeleton;
 
 use UserControlSkeleton\Models\GenerateView;
+use UserControlSkeleton\Models\GenerateViewWithMessage;
+use UserControlSkeleton\Controllers\AdminController;
 use UserControlSkeleton\Controllers\UserController;
 use UserControlSkeleton\Controllers\AuthController;
-use UserControlSkeleton\Models\GenerateViewWithMessage;
 
-class RouteController
+class Routes
 {
 	protected $route;
 
@@ -19,15 +20,15 @@ class RouteController
 	public function switchView()
 	{
 		if (isset($_POST['login'])) {
-			(new AuthController)->login((new RequestController));
+			(new AuthController)->login((new Requests));
 		}
 
 		if (isset($_POST['register_user'])) {
-			(new UserController)->create((new RequestController));
+			(new UserController)->create((new Requests));
 		}
 
 		if (isset($_POST['update_user'])) {
-			(new UserController)->update((new RequestController));
+			(new UserController)->update((new Requests));
 		}
 
 		if ($this->route === '/Logout') {
@@ -35,39 +36,42 @@ class RouteController
 		}
 
 		if ((new UserController)->isLoggedIn() && (new AuthController)->isAdmin()) {
-			GenerateView::render('/AdminNavBar');
+			(new GenerateView)->render('/AdminNavBar')->now();
 		}
 
 		if ((new UserController)->isLoggedIn() && !(new AuthController)->isAdmin()) {
-			GenerateView::render('/UserNavBar');
+			(new GenerateView)->render('/UserNavBar')->now();
 		}
 
 		if (!(new UserController)->isLoggedIn()) {
-			GenerateView::render('/GuestNavBar');
+			(new GenerateView)->render('/GuestNavBar')->now();
 		}
 
 		if ($this->route === '/controlPanel' && (new AuthController)->isAdmin()) {
-			GenerateView::render($this->route);
+			(new GenerateView)->render($this->route)->now();
 		}
 
 		if ($this->route === '/controlPanel' && !(new AuthController)->isAdmin()) {
-			GenerateViewWithMessage::render('error', 'You are not authorized.');
+			(new GenerateViewWithMessage)->render('error', 'You are not authorized.');
 		}
 
 		if ($this->route === '/Account' && (new UserController)->isLoggedIn()) {
-			GenerateViewWithMessage::render($this->route, (new UserController)->getInfo());
+			(new GenerateViewWithMessage)->render($this->route, (new UserController)->getInfo())->now();
 		}
 
 		if ($this->route === '/Register' && !(new UserController)->isLoggedIn()) {
-			GenerateView::render($this->route);
+			(new GenerateView)->render($this->route)->now();
 		}
 
 		if ($this->route === '/') {
-			GenerateView::render($this->route);
+			(new GenerateView)->render($this->route)->now();
 		}
 
 		if (isset($_POST['search_users'])) {
-			GenerateViewWithMessage::render('UserTable', (new AdminController)->searchUsers($_POST['search_field']));
+			(new GenerateViewWithMessage)
+				->render('UserTable', (new AdminController)
+				->searchUsers($_POST['search_field']))
+				->now();
 		}
 	}
 }

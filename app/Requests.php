@@ -1,8 +1,8 @@
 <?php
 
-namespace UserControlSkeleton\Controllers;
+namespace UserControlSkeleton;
 
-class RequestController
+class Requests
 {
 	public $data;
 

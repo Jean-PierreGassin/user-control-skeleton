@@ -1,4 +1,30 @@
 <div class="row align-center">
+	<?php if (isset($_SESSION['error'])): ?>
+	<div class="medium-6 text-center">
+		<div class="alert callout">
+			<?php
+			echo $_SESSION['error'];
+			unset($_SESSION['error']);
+			?>
+		</div>
+	</div>
+	<?php endif ?>
+
+	<?php if (isset($_SESSION['success'])): ?>
+	<div class="medium-6 text-center">
+		<div class="success callout">
+			<?php
+			echo $_SESSION['success'];
+			unset($_SESSION['success']);
+			?>
+		</div>
+	</div>
+	<?php endif ?>
+</div>
+
+<div class="row">&nbsp;</div>
+
+<div class="row align-center">
 	<form method="POST" class="small-12 medium-8 large-6 columns">
 		<div class="row">
 			<div class="small-12 columns">
