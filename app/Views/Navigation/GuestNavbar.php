@@ -14,7 +14,7 @@
 				<div class="input-group">
 					<input class="input-group-field" type="text" placeholder="Username" name="username" required>
 					<input class="input-group-field" type="password" placeholder="Password" name="password" required>
-					<input class="success button input-group-button expanded" type="submit" name="login" value="Login">
+					<input class="success button input-group-button expanded" type="submit" value="Login">
 					<button class="button input-group-button" onclick="window.location.href='/Register'">Register</button>
 				</div>
 			</form>
