@@ -6,7 +6,9 @@ class GenerateView
 {
 	protected $view;
 
-	public function render($view)
+	protected $message;
+
+	public function render($view, $message = null)
 	{
 		switch($view) {
 			case('/'):
@@ -39,6 +41,28 @@ class GenerateView
 
 			return $this;
 
+			case('/Account'):
+			$this->view = '../app/Views/Pages/Account.php';
+			$this->message = $message;
+
+			return $this;
+
+			case('UserTable'):
+			$this->view = '../app/Views/Admin/UserTable.php';
+			$this->message = $message;
+
+			return $this;
+
+			case('error'):
+			$_SESSION['error'] = $message;
+
+			return;
+
+			case('success'):
+			$_SESSION['success'] = $message;
+
+			return;
+
 			default:
 			$this->view = '../app/Views/Pages/Home.php';
 
@@ -48,6 +72,8 @@ class GenerateView
 
 	public function now()
 	{
+		$message = $this->message;
+
 		include_once '../app/Views/Header.php';
 		include_once $this->view;
 		include_once '../app/Views/Footer.php';

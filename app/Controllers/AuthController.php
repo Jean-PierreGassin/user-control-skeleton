@@ -4,7 +4,7 @@ namespace UserControlSkeleton\Controllers;
 
 use UserControlSkeleton\Requests;
 use UserControlSkeleton\Models\User\User;
-use UserControlSkeleton\Models\GenerateViewWithMessage;
+use UserControlSkeleton\Models\GenerateView;
 
 class AuthController
 {
@@ -24,7 +24,7 @@ class AuthController
 		$request = $request->data;
 
 		if (empty($request['username']) || empty($request['password'])) {
-			(new GenerateViewWithMessage)->render('error', 'All fields are required.');
+			(new GenerateView)->render('error', 'All fields are required.');
 
 			return;
 		}
@@ -35,7 +35,7 @@ class AuthController
 			unset($_SESSION['logged_in']);
 			unset($_SESSION['username']);
 
-			(new GenerateViewWithMessage)->render('error', 'Incorrect login details.');
+			(new GenerateView)->render('error', 'Incorrect login details.');
 
 			return;
 		}
