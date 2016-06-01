@@ -15,6 +15,10 @@ class Requests
 
 	public function get($field)
 	{
+		if (!array_key_exists($field, $this->data)) {
+			return;
+		}
+
 		return $this->data[$field];
 	}
 }
