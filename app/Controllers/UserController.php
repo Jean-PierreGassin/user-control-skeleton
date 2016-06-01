@@ -17,20 +17,20 @@ class UserController
 
 		foreach ($requests as $field) {
 			if (empty($field)) {
-				$view->render('error', 'All fields are required.');
+				$view->render('error', 'All fields are required');
 
 				return;
 			}
 		}
 
 		if ($requests['password'] !== $requests['password_confirm']) {
-			$view->render('error', 'Passwords do not match.');
+			$view->render('error', 'Passwords do not match');
 
 			return;
 		}
 
 		if (!(new User)->create($requests)) {
-			$view->render('error', 'Username already exists.');
+			$view->render('error', 'Username already exists');
 
 			return;
 		}
@@ -44,24 +44,24 @@ class UserController
 		$request = $request->data;
 
 		if (empty($request['first_name']) || empty($request['last_name'])) {
-			$view->render('error', 'First name and last name are required.');
+			$view->render('error', 'First name and last name are required');
 
 			return;
 		}
 
 		if ((new User)->update($request['username'], $request['current_password'], $request['first_name'], $request['last_name'])) {
-			$view->render('success', 'Updated information successfully.');
+			$view->render('success', 'Updated information successfully');
 
 			return;
 		} else {
-			$view->render('error', 'Wrong password.');
+			$view->render('error', 'Wrong password');
 
 			return;
 		}
 
 		//TODO Add the ability to update password
 
-		$view->render('error', 'Passwords do not match.');
+		$view->render('error', 'Passwords do not match');
 
 		return;
 	}

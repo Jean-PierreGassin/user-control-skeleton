@@ -25,7 +25,7 @@ class AuthController
 		$request = $request->data;
 
 		if (empty($request['username']) || empty($request['password'])) {
-			$view->render('error', 'All fields are required.');
+			$view->render('error', 'All fields are required');
 
 			return;
 		}
@@ -36,7 +36,7 @@ class AuthController
 			unset($_SESSION['logged_in']);
 			unset($_SESSION['username']);
 
-			$view->render('error', 'Incorrect login details.');
+			$view->render('error', 'Incorrect login details');
 
 			return;
 		}
