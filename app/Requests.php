@@ -21,4 +21,13 @@ class Requests
 
 		return $this->data[$field];
 	}
+
+	public function toArray()
+	{
+		foreach ($this->data as $field) {
+			$this->data[] = $field;
+		}
+
+		return $this->data;
+	}
 }
