@@ -39,19 +39,19 @@ class User implements UserInterface
 		return true;
 	}
 
-	public function update(array $request)
+	public function update(Requests $request)
 	{
-		if (!password_verify($request['current_password'], $this->getPassword($request['username']))) {
+		$statement = $this->database->connect();
+		$username = $request->get('username');
+		$password = $request->get('new_password');
+		$firstName = $request->get('first_name');
+		$lastName = $request->get('last_name');
+
+		if (!password_verify($request->get('current_password'), $this->getPassword($username))) {
 			return;
 		}
 
-		$statement = $this->database->connect();
-		$username = $request['username'];
-		$firstName = $request['first_name'];
-		$lastName = $request['last_name'];
-		$password = $request['new_password'];
-
-		if (!empty($password)) {
+		if (!empty($password) && !empty($request->get('password_confirm'))) {
 			$password = password_hash($password, PASSWORD_BCRYPT);
 			$statement = $statement->prepare('UPDATE users SET first_name = ?, last_name = ?, password = ? WHERE user = ?');
 

@@ -53,7 +53,7 @@ class UserController
 			(new GenerateView)->render('error', 'You must confirm your current password');
 		}
 
-		if ((new User)->update($request->toArray())) {
+		if ((new User)->update($request)) {
 			(new GenerateView)->render('success', 'Information updated successfully');
 
 			return;

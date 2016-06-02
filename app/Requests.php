@@ -21,9 +21,4 @@ class Requests
 
 		return $this->data[$field];
 	}
-
-	public function toArray()
-	{
-		return $this->data;
-	}
 }
