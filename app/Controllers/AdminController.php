@@ -22,11 +22,7 @@ class AdminController
 			return;
 		}
 
-		$results = $user->search($search);
-
-		foreach ($results as $result) {
-			return $result;
-		}
+		return $user->search($search);
 	}
 
 	public function deleteUser()

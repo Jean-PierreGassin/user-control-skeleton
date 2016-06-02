@@ -112,8 +112,8 @@ class User implements UserInterface
 		$params = array("%$searchTerms%", "%$searchTerms%", "%$searchTerms%");
 		$statement->execute($params);
 
-		while ($user[] = $statement->fetch(PDO::FETCH_ASSOC)) {
-			$results[] = $user;
+		while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+			$results[] = $row;
 		}
 
 		return $results;

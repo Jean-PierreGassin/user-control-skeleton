@@ -4,10 +4,8 @@
 		<table class="hover stack" style="table-layout: fixed">
 			<thead>
 				<tr>
-					<?php foreach ($message as $columns): ?>
-						<?php foreach($columns as $key => $value): ?>
-							<th><?php echo $key ?></th>
-						<?php endforeach ?>
+					<?php foreach ($message[0] as $key => $value): ?>
+						<th><?php echo $key ?></th>
 					<?php endforeach ?>
 				</tr>
 			</thead>
