@@ -4,20 +4,20 @@ A basic user control skeleton which was created for the sole purpose of personal
 
 ## Requirements
 
-* A MySQL Database (currently tested on MySQL)
-* PHP 5.4+ (untested in previous versions)
-* [node](http://node.js.org)
+* MySQL
+* PHP 5.4+ (not tested in previous versions)
+* [node v4+](http://node.js.org)
 * [bower](http://bower.io): `npm install bower -g`
 
 ## Installation/usage
 
 * Re-name 'env.example' to '.env' and configure
-* Create the table set in your .env file
+* Create the table you specified in your '.env' file
 * Run `npm install`
 * Run `bower install`
 * Run `composer install`
 * Run `gulp`
-* Run the following SQL:
+* Execute the following SQL:
 
 ```sql
 CREATE TABLE IF NOT EXISTS users (
@@ -31,4 +31,4 @@ CREATE TABLE IF NOT EXISTS users (
 ```
 
 ## NOTE OF CAUTION:
-This is not recommended for commercial use
+This is not recommended for production environments
