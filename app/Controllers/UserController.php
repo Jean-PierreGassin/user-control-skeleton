@@ -43,19 +43,23 @@ class UserController
 			return;
 		}
 
-		if ((new User)->update($request->get('username'), $request->get('current_password'), $request->get('first_name'), $request->get('last_name'))) {
-			(new GenerateView)->render('success', 'Updated information successfully');
-
-			return;
-		} else {
-			(new GenerateView)->render('error', 'Wrong password');
+		if (!empty($request->get('new_password')) && empty($request->get('password_confirm'))) {
+			(new GenerateView)->render('error', 'New password and confirm new password do not match');
 
 			return;
 		}
 
-		//TODO Add the ability to update password
+		if (empty($request->get('current_password'))) {
+			(new GenerateView)->render('error', 'You must confirm your current password');
+		}
 
-		(new GenerateView)->render('error', 'Passwords do not match');
+		if ((new User)->update($request->toArray())) {
+			(new GenerateView)->render('success', 'Information updated successfully');
+
+			return;
+		}
+
+		(new GenerateView)->render('error', 'Incorrect password');
 
 		return;
 	}
