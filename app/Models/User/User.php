@@ -48,7 +48,7 @@ class User
 	{
 		$database = $this->getPassword($username);
 
-		if (!password_verify($password, $database['password'])) {
+		if (!password_verify($password, $this->getPassword($username))) {
 			return;
 		}
 
@@ -89,7 +89,9 @@ class User
 
 		$statement->execute([$username]);
 
-		return $statement->fetch(PDO::FETCH_ASSOC);
+		$result = $statement->fetch(PDO::FETCH_ASSOC);
+
+		return $result['password'];
 	}
 
 	public function search($searchTerms)

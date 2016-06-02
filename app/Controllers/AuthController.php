@@ -31,7 +31,7 @@ class AuthController
 		$username = $request->get('username');
 		$password = $request->get('password');
 
-		if (!password_verify($username, (new User)->getPassword($request->get('username')))) {
+		if (!password_verify($password, (new User)->getPassword($request->get('username')))) {
 			unset($_SESSION['logged_in']);
 			unset($_SESSION['username']);
 
