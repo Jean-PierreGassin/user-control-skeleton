@@ -23,13 +23,13 @@ gulp.task('sass', function() {
     	})
 	)
 	.pipe(concat('app.css'))
-    .pipe(gulp.dest('app/public/assets/css'));
+    .pipe(gulp.dest('public/assets/css'));
 });
 
 gulp.task('scripts', function() {
 	return gulp.src(jsPaths)
 		.pipe(concat('app.js'))
-		.pipe(gulp.dest('app/public/assets/js'));
+		.pipe(gulp.dest('public/assets/js'));
 });
 
 gulp.task('default', ['sass', 'scripts'], function() {

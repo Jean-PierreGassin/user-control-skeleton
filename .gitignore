@@ -1,4 +1,4 @@
-app/public/assets
+public/assets
 bower_components
 node_modules
 vendor
