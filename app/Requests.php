@@ -24,10 +24,6 @@ class Requests
 
 	public function toArray()
 	{
-		foreach ($this->data as $field) {
-			$this->data[] = $field;
-		}
-
 		return $this->data;
 	}
 }
