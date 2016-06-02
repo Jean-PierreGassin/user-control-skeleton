@@ -3,13 +3,12 @@
 namespace UserControlSkeleton\Models\User;
 
 use PDO;
+use UserControlSkeleton\Requests;
 use UserControlSkeleton\Interfaces\UserInterface;
 use UserControlSkeleton\Models\Database\MySQLDatabase;
 
 class User implements UserInterface
 {
-	protected $database;
-
 	protected $username;
 
 	public function __construct()
@@ -18,27 +17,22 @@ class User implements UserInterface
 		$this->username = isset($_SESSION['username']) ? $_SESSION['username'] : false;
 	}
 
-	public function create($request, $userGroup = '1')
+	public function create(Requests $request, $userGroup = '1')
 	{
-		$password = password_hash($request['password'], PASSWORD_BCRYPT);
-		$statement = $this->database->connect();
-		$statement = $statement->prepare('SELECT user FROM users WHERE user = ?');
-
-		$statement->execute([$request['username']]);
-
-		while ($field = $statement->fetch(PDO::FETCH_ASSOC)) {
+		if ($this->exists($request->get('username'))) {
 			return;
 		}
 
+		$password = password_hash($request->get('password'), PASSWORD_BCRYPT);
 		$statement = $this->database->connect();
 		$statement = $statement->prepare('INSERT INTO users (user, password, first_name, last_name, user_group)
 		VALUES (?, ?, ?, ?, ?)');
 
 		$statement->execute([
-			$request['username'],
+			$request->get('username'),
 			$password,
-			$request['first_name'],
-			$request['last_name'],
+			$request->get('first_name'),
+			$request->get('last_name'),
 			$userGroup
 		]);
 
@@ -59,6 +53,20 @@ class User implements UserInterface
 		$statement->execute([$firstName, $lastName, $username]);
 
 		return true;
+	}
+
+	public function exists($user)
+	{
+		$statement = $this->database->connect();
+		$statement = $statement->prepare('SELECT user FROM users WHERE user = ?');
+
+		$statement->execute([$user]);
+
+		while ($field = $statement->fetch(PDO::FETCH_ASSOC)) {
+			return true;
+		}
+
+		return;
 	}
 
 	public function isAdmin()
