@@ -6,7 +6,7 @@ A basic user control skeleton which was created for the sole purpose of personal
 
 * MySQL
 * PHP 5.4+ (not tested in previous versions)
-* [node v4+](http://node.js.org)
+* [node v4+](http://nodejs.org)
 * [bower](http://bower.io): `npm install bower -g`
 
 ## Installation/usage
