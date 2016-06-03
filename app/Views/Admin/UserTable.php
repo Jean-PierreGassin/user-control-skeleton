@@ -13,7 +13,7 @@
 				<?php foreach ($message as $users): ?>
 					<tr>
 						<?php foreach ($users as $cell): ?>
-							<td class="table-scroll" style="white-space: nowrap;"><?php echo $cell ?></td>
+							<td class="table-scroll" style="white-space: nowrap; text-align: center;"><?php echo $cell ?></td>
 						<?php endforeach ?>
 					</tr>
 				<?php endforeach ?>
