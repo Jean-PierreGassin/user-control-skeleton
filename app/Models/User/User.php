@@ -11,10 +11,13 @@ class User implements UserInterface
 {
 	protected $username;
 
+	protected $timestamp;
+
 	public function __construct()
 	{
 		$this->database = new MySQLDatabase();
 		$this->username = isset($_SESSION['username']) ? $_SESSION['username'] : false;
+		$this->timestamp = date('Y-m-d G:i:s');
 	}
 
 	public function create(Requests $request, $userGroup = '1')
@@ -25,15 +28,15 @@ class User implements UserInterface
 
 		$password = password_hash($request->get('password'), PASSWORD_BCRYPT);
 		$statement = $this->database->connect();
-		$statement = $statement->prepare('INSERT INTO users (user, password, first_name, last_name, user_group)
-		VALUES (?, ?, ?, ?, ?)');
+		$statement = $statement->prepare('INSERT INTO users (user, password, first_name, last_name, usergroup, created_at) VALUES (?, ?, ?, ?, ?)');
 
 		$statement->execute([
 			$request->get('username'),
 			$password,
 			$request->get('first_name'),
 			$request->get('last_name'),
-			$userGroup
+			$userGroup,
+			$this->timestamp
 		]);
 
 		return true;
@@ -53,16 +56,16 @@ class User implements UserInterface
 
 		if (!empty($password) && !empty($request->get('password_confirm'))) {
 			$password = password_hash($password, PASSWORD_BCRYPT);
-			$statement = $statement->prepare('UPDATE users SET first_name = ?, last_name = ?, password = ? WHERE user = ?');
+			$statement = $statement->prepare('UPDATE users SET first_name = ?, last_name = ?, password = ?, updated_at = ? WHERE user = ?');
 
-			$statement->execute([$firstName, $lastName, $password, $username]);
+			$statement->execute([$firstName, $lastName, $password, $username, $this->timestamp]);
 
 			return true;
 		}
 
-		$statement = $statement->prepare('UPDATE users SET first_name = ?, last_name = ? WHERE user = ?');
+		$statement = $statement->prepare('UPDATE users SET first_name = ?, last_name = ?, updated_at = ? WHERE user = ?');
 
-		$statement->execute([$firstName, $lastName, $username]);
+		$statement->execute([$firstName, $lastName, $username, $this->timestamp]);
 
 		return true;
 	}
@@ -84,7 +87,7 @@ class User implements UserInterface
 	public function isAdmin()
 	{
 		$statement = $this->database->connect();
-		$statement = $statement->prepare('SELECT user_group FROM users WHERE user = ?');
+		$statement = $statement->prepare('SELECT usergroup FROM users WHERE user = ?');
 
 		$statement->execute([$this->username]);
 
