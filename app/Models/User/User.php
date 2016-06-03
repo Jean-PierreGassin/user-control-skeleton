@@ -28,7 +28,7 @@ class User implements UserInterface
 
 		$password = password_hash($request->get('password'), PASSWORD_BCRYPT);
 		$statement = $this->database->connect();
-		$statement = $statement->prepare('INSERT INTO users (user, password, first_name, last_name, usergroup, created_at) VALUES (?, ?, ?, ?, ?)');
+		$statement = $statement->prepare('INSERT INTO users (user, password, first_name, last_name, user_group, created_at) VALUES (?, ?, ?, ?, ?, ?)');
 
 		$statement->execute([
 			$request->get('username'),
@@ -65,7 +65,7 @@ class User implements UserInterface
 
 		$statement = $statement->prepare('UPDATE users SET first_name = ?, last_name = ?, updated_at = ? WHERE user = ?');
 
-		$statement->execute([$firstName, $lastName, $username, $this->timestamp]);
+		$statement->execute([$firstName, $lastName, $this->timestamp, $username]);
 
 		return true;
 	}
@@ -87,7 +87,7 @@ class User implements UserInterface
 	public function isAdmin()
 	{
 		$statement = $this->database->connect();
-		$statement = $statement->prepare('SELECT usergroup FROM users WHERE user = ?');
+		$statement = $statement->prepare('SELECT user_group FROM users WHERE user = ?');
 
 		$statement->execute([$this->username]);
 
