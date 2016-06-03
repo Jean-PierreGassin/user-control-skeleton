@@ -12,22 +12,27 @@ A basic user control skeleton which was created for the sole purpose of personal
 ## Installation/usage
 
 * Re-name 'env.example' to '.env' and configure
-* Create the table you specified in your '.env' file
 * Run `npm install`
 * Run `bower install`
 * Run `composer install`
 * Run `gulp`
-* Execute the following SQL:
+* Execute the following SQL and replace table names:
 
 ```sql
-CREATE TABLE IF NOT EXISTS users (
-	id INT(6) AUTO_INCREMENT PRIMARY KEY,
-	user VARCHAR(30) UNIQUE NOT NULL,
-	password VARCHAR(100) NOT NULL,
-	first_name VARCHAR(30) NOT NULL,
-	last_name VARCHAR(30) NOT NULL,
-	user_group INT(2) NOT NULL
-);
+CREATE DATABASE user_control_skeleton;
+
+CREATE TABLE IF NOT EXISTS user_control_skeleton.users (
+    id INT(6) AUTO_INCREMENT PRIMARY KEY,
+    user VARCHAR(30) UNIQUE NOT NULL,
+    password VARCHAR(100) NOT NULL,
+    first_name VARCHAR(30) NOT NULL,
+    last_name VARCHAR(30) NOT NULL,
+    user_group INT(1) DEFAULT 1,
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		updated_at TIMESTAMP NULL,
+		deleted_at TIMESTAMP NULL,
+		deleted INT(1) DEFAULT 0
+) DEFAULT CHARSET=utf8;
 ```
 
 ## NOTE OF CAUTION:
