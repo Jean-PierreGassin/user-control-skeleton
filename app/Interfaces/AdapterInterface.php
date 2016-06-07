@@ -2,9 +2,9 @@
 
 namespace UserControlSkeleton\Interfaces;
 
-interface DatabaseInterface
+interface AdapterInterface
 {
-	public function __construct();
 	public function connect();
+	
 	public function getColumns();
 }

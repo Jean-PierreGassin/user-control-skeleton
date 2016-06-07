@@ -3,31 +3,33 @@
 namespace UserControlSkeleton\Models\User;
 
 use PDO;
-use UserControlSkeleton\Requests;
+use UserControlSkeleton\Request;
 use UserControlSkeleton\Interfaces\UserInterface;
-use UserControlSkeleton\Models\Database\MySQLDatabase;
+use UserControlSkeleton\Interfaces\AdapterInterface;
 
-class User implements UserInterface
+class User
 {
+	protected $adapter;
+
 	protected $username;
 
 	protected $timestamp;
 
-	public function __construct()
+	public function __construct(AdapterInterface $adapter)
 	{
-		$this->database = new MySQLDatabase();
+		$this->adapter = $adapter;
 		$this->username = isset($_SESSION['username']) ? $_SESSION['username'] : false;
 		$this->timestamp = date('Y-m-d G:i:s');
 	}
 
-	public function create(Requests $request, $userGroup = '1')
+	public function create(Request $request, $userGroup = '1')
 	{
 		if ($this->exists($request->get('username'))) {
 			return;
 		}
 
 		$password = password_hash($request->get('password'), PASSWORD_BCRYPT);
-		$statement = $this->database->connect();
+		$statement = $this->adapter->connect();
 		$statement = $statement->prepare('INSERT INTO users (user, password, first_name, last_name, user_group, created_at) VALUES (?, ?, ?, ?, ?, ?)');
 
 		$statement->execute([
@@ -42,9 +44,9 @@ class User implements UserInterface
 		return true;
 	}
 
-	public function update(Requests $request)
+	public function update(Request $request)
 	{
-		$statement = $this->database->connect();
+		$statement = $this->adapter->connect();
 		$username = $request->get('username');
 		$password = $request->get('new_password');
 		$firstName = $request->get('first_name');
@@ -72,7 +74,7 @@ class User implements UserInterface
 
 	public function exists($user)
 	{
-		$statement = $this->database->connect();
+		$statement = $this->adapter->connect();
 		$statement = $statement->prepare('SELECT user FROM users WHERE user = ?');
 
 		$statement->execute([$user]);
@@ -86,7 +88,7 @@ class User implements UserInterface
 
 	public function isAdmin()
 	{
-		$statement = $this->database->connect();
+		$statement = $this->adapter->connect();
 		$statement = $statement->prepare('SELECT user_group FROM users WHERE user = ?');
 
 		$statement->execute([$this->username]);
@@ -98,7 +100,7 @@ class User implements UserInterface
 
 	public function getInfo()
 	{
-		$statement = $this->database->connect();
+		$statement = $this->adapter->connect();
 		$statement = $statement->prepare('SELECT * FROM users WHERE user = ?');
 
 		$statement->execute([$this->username]);
@@ -108,7 +110,7 @@ class User implements UserInterface
 
 	public function getPassword($username)
 	{
-		$statement = $this->database->connect();
+		$statement = $this->adapter->connect();
 		$statement = $statement->prepare('SELECT password FROM users WHERE user = ?');
 
 		$statement->execute([$username]);
@@ -121,7 +123,7 @@ class User implements UserInterface
 	public function search($searchTerms)
 	{
 		$results = [];
-		$statement = $this->database->connect();
+		$statement = $this->adapter->connect();
 		$statement = $statement->prepare('SELECT * FROM users WHERE user LIKE ? OR first_name LIKE ? or last_name LIKE ?');
 
 		$params = array("%$searchTerms%", "%$searchTerms%", "%$searchTerms%");

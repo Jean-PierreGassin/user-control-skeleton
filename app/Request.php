@@ -2,7 +2,7 @@
 
 namespace UserControlSkeleton;
 
-class Requests
+class Request
 {
 	protected $data;
 

@@ -2,24 +2,32 @@
 
 namespace UserControlSkeleton\Controllers;
 
-use UserControlSkeleton\Requests;
+use UserControlSkeleton\Request;
 use UserControlSkeleton\Models\User\User;
 use UserControlSkeleton\Models\GenerateView;
+use UserControlSkeleton\Models\Database\MysqlAdapter;
 
 class AuthController
 {
+	protected $user;
+
+	public function __construct(User $user)
+	{
+		$this->user = $user;
+	}
+
 	public function isAdmin()
 	{
-		$user = (new User)->isAdmin();
+		$row = $this->user->isAdmin();
 
-		if ($user['user_group'] != 2) {
+		if ($row['user_group'] != 2) {
 			return;
 		}
 
 		return true;
 	}
 
-	public function login(Requests $request)
+	public function login(Request $request)
 	{
 		if (!$request->get('username') || !$request->get('password')) {
 			(new GenerateView)->render('error', 'All fields are required');
@@ -30,7 +38,7 @@ class AuthController
 		$username = $request->get('username');
 		$password = $request->get('password');
 
-		if (!password_verify($password, (new User)->getPassword($request->get('username')))) {
+		if (!password_verify($password, $this->user->getPassword($request->get('username')))) {
 			unset($_SESSION['logged_in']);
 			unset($_SESSION['username']);
 

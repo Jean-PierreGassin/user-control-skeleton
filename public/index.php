@@ -10,7 +10,7 @@ require_once __DIR__."/../vendor/autoload.php";
 session_start();
 
 $dotenv = new Dotenv(__DIR__."/../");
-$route = new Routes();
-
 $dotenv->load();
+
+$route = new Routes();
 $route->switchView();

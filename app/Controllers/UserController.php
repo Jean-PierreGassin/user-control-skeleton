@@ -2,15 +2,22 @@
 
 namespace UserControlSkeleton\Controllers;
 
-use UserControlSkeleton\Requests;
-use UserControlSkeleton\Controllers\AuthController;
+use UserControlSkeleton\Request;
 use UserControlSkeleton\Models\User\User;
 use UserControlSkeleton\Models\GenerateView;
-use UserControlSkeleton\Models\Database\MySQLDatabase;
+use UserControlSkeleton\Controllers\AuthController;
+use UserControlSkeleton\Models\Database\MysqlAdapter;
 
 class UserController
 {
-	public function create(Requests $request)
+	protected $user;
+
+	public function __construct(User $user)
+	{
+		$this->user = $user;
+	}
+
+	public function create(Request $request)
 	{
 		foreach ($request as $field) {
 			if (empty($field)) {
@@ -26,16 +33,16 @@ class UserController
 			return;
 		}
 
-		if (!(new User)->create($request)) {
+		if (!$this->user->create($request)) {
 			(new GenerateView)->render('error', 'Username already exists');
 
 			return;
 		}
 
-		(new AuthController)->login($request);
+		(new AuthController($this->user))->login($request);
 	}
 
-	public function update(Requests $request)
+	public function update(Request $request)
 	{
 		if (empty($request->get('first_name')) || empty($request->get('last_name'))) {
 			(new GenerateView)->render('error', 'First name and last name are required');
@@ -53,7 +60,7 @@ class UserController
 			(new GenerateView)->render('error', 'You must confirm your current password');
 		}
 
-		if ((new User)->update($request)) {
+		if ($this->user->update($request)) {
 			(new GenerateView)->render('success', 'Information updated successfully');
 
 			return;

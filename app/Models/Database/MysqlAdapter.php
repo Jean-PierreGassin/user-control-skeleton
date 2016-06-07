@@ -3,9 +3,9 @@
 namespace UserControlSkeleton\Models\Database;
 
 use PDO;
-use UserControlSkeleton\Interfaces\DatabaseInterface;
+use UserControlSkeleton\Interfaces\AdapterInterface;
 
-class MySQLDatabase implements DatabaseInterface
+class MysqlAdapter implements AdapterInterface
 {
 	protected $user;
 

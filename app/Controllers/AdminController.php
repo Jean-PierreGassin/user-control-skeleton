@@ -3,26 +3,33 @@
 namespace UserControlSkeleton\Controllers;
 
 use UserControlSkeleton\Models\User\User;
-use UserControlSkeleton\Models\Database\MySQLDatabase;
+use UserControlSkeleton\Interfaces\AdapterInterface;
+use UserControlSkeleton\Models\Database\MysqlAdapter;
 
 class AdminController
 {
+	protected $adapter;
+
+	protected $user;
+
+	public function __construct(AdapterInterface $adapter, User $user)
+	{
+		$this->adapter = $adapter;
+		$this->user = $user;
+	}
+
 	public function getColumns()
 	{
-		$database = new MySQLDatabase();
-
-		return $this->database->getColumns();
+		return $this->adapter->getColumns();
 	}
 
 	public function searchUsers($search)
 	{
-		$user =  new User();
-
-		if (!$user->isAdmin()) {
+		if (!$this->user->isAdmin()) {
 			return;
 		}
 
-		return $user->search($search);
+		return $this->user->search($search);
 	}
 
 	public function deleteUser()
