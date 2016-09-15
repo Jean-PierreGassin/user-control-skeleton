@@ -5,17 +5,17 @@
 
 class Response
 {
-	public function setStatus($status)
-	{
-		$this->status = $status;
+    public function setStatus($status)
+    {
+        $this->status = $status;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function addHeaders($header)
-	{
-		$this->header = $header;
+    public function addHeaders($header)
+    {
+        $this->header = $header;
 
-		return $this;
-	}
+        return $this;
+    }
 }

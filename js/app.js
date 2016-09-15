@@ -2,7 +2,7 @@
 $(document).foundation();
 
 $(document).ready(function() {
-	setInterval(function() {
-		$('.callout').fadeOut(1500);
-	}, 2500);
+    setInterval(function() {
+        $('.callout').fadeOut(1500);
+    }, 2500);
 }());

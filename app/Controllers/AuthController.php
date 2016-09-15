@@ -9,56 +9,56 @@ use UserControlSkeleton\Models\Database\MysqlAdapter;
 
 class AuthController
 {
-	protected $user;
+    protected $user;
 
-	public function __construct(User $user)
-	{
-		$this->user = $user;
-	}
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
 
-	public function isAdmin()
-	{
-		$row = $this->user->isAdmin();
+    public function isAdmin()
+    {
+        $row = $this->user->isAdmin();
 
-		if ($row['user_group'] != 2) {
-			return;
-		}
+        if ($row['user_group'] != 2) {
+            return;
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	public function login(Request $request)
-	{
-		if (!$request->get('username') || !$request->get('password')) {
-			(new GenerateView)->render('error', 'All fields are required');
+    public function login(Request $request)
+    {
+        if (!$request->get('username') || !$request->get('password')) {
+            (new GenerateView)->render('error', 'All fields are required');
 
-			return;
-		}
+            return;
+        }
 
-		$username = $request->get('username');
-		$password = $request->get('password');
+        $username = $request->get('username');
+        $password = $request->get('password');
 
-		if (!password_verify($password, $this->user->getPassword($request->get('username')))) {
-			unset($_SESSION['logged_in']);
-			unset($_SESSION['username']);
+        if (!password_verify($password, $this->user->getPassword($request->get('username')))) {
+            unset($_SESSION['logged_in']);
+            unset($_SESSION['username']);
 
-			(new GenerateView)->render('error', 'Incorrect login details');
+            (new GenerateView)->render('error', 'Incorrect login details');
 
-			return;
-		}
+            return;
+        }
 
-		$_SESSION['logged_in'] = true;
-		$_SESSION['username'] = $username;
+        $_SESSION['logged_in'] = true;
+        $_SESSION['username'] = $username;
 
-		header("Location: ../Account");
-	}
+        header("Location: ../Account");
+    }
 
-	public function logout()
-	{
-		unset($_SESSION['logged_in']);
-		unset($_SESSION['username']);
+    public function logout()
+    {
+        unset($_SESSION['logged_in']);
+        unset($_SESSION['username']);
 
-		session_destroy();
-		header("Location: ../");
-	}
+        session_destroy();
+        header("Location: ../");
+    }
 }
