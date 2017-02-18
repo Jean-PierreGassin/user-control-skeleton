@@ -6,16 +6,14 @@ A basic user control skeleton which was created for the sole purpose of personal
 
 * MySQL
 * PHP 5.4+ (not tested in previous versions)
-* [node v4+](http://nodejs.org)
-* [bower](http://bower.io): `npm install bower -g`
 
 ## Installation/usage
 
 * Re-name 'env.example' to '.env' and configure
-* Run `npm install`
-* Run `bower install`
 * Run `composer install`
-* Run `gulp`
+* Run `yarn install`
+* Run `node_modules/.bin/bower install`
+* Run `node_modules/.bin/gulp`
 * Execute the following SQL and replace table names:
 
 ```sql
