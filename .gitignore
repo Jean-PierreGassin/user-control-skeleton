@@ -1,6 +1,7 @@
 public/assets
 bower_components
 node_modules
+docker-compose.yml
 vendor
 .env
 .DS_Store
