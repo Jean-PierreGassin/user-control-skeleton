@@ -60,7 +60,7 @@ class User
             $password = password_hash($password, PASSWORD_BCRYPT);
             $statement = $statement->prepare('UPDATE users SET first_name = ?, last_name = ?, password = ?, updated_at = ? WHERE user = ?');
 
-            $statement->execute([$firstName, $lastName, $password, $username, $this->timestamp]);
+            $statement->execute([$firstName, $lastName, $password, $this->timestamp, $username]);
 
             return true;
         }
