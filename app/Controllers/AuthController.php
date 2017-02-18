@@ -5,15 +5,17 @@ namespace UserControlSkeleton\Controllers;
 use UserControlSkeleton\Request;
 use UserControlSkeleton\Models\User\User;
 use UserControlSkeleton\Models\GenerateView;
-use UserControlSkeleton\Models\Database\MysqlAdapter;
+use UserControlSkeleton\Controllers\DatabaseController;
 
-class AuthController
+class AuthController extends DatabaseController
 {
     protected $user;
 
-    public function __construct(User $user)
+    public function __construct()
     {
-        $this->user = $user;
+        parent::__construct();
+
+        $this->user = new User($this->adapter);
     }
 
     public function isAdmin()
@@ -51,6 +53,17 @@ class AuthController
         $_SESSION['username'] = $username;
 
         header("Location: ../Account");
+    }
+
+    public function isLoggedIn()
+    {
+        if (!isset($_SESSION['logged_in']) || !isset($_SESSION['username'])) {
+            unset($_SESSION['logged_in']);
+
+            return;
+        }
+
+        return true;
     }
 
     public function logout()

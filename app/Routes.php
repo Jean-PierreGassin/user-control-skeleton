@@ -2,27 +2,18 @@
 
 namespace UserControlSkeleton;
 
-use UserControlSkeleton\Models\User\User;
 use UserControlSkeleton\Models\GenerateView;
-use UserControlSkeleton\Controllers\UserController;
-use UserControlSkeleton\Controllers\AuthController;
-use UserControlSkeleton\Controllers\AdminController;
-use UserControlSkeleton\Models\Database\MysqlAdapter;
+use UserControlSkeleton\Controllers\BaseController;
 
-class Routes
+class Routes extends BaseController
 {
     protected $route;
-
-    protected $user;
-
-    protected $adapter;
 
     protected $routeList;
 
     public function __construct()
     {
-        $this->adapter = new MysqlAdapter();
-        $this->user = new User($this->adapter);
+        parent::__construct();
 
         $this->route = $_SERVER['REQUEST_URI'];
         $this->routeList = $this->getRoutes();
@@ -30,47 +21,52 @@ class Routes
 
     public function switchView()
     {
-        if (in_array($this->route, array_keys($this->routeList))) {
-            $route = $this->routeList[$this->route];
+        if (!in_array($this->route, array_keys($this->routeList))) {
+            return header('location: /');
+        }
 
-            $view = new GenerateView();
-            $user = new UserController($this->user);
-            $auth = new AuthController($this->user);
-            $controller = new $route['controller'](...$route['constructs']);
+        $view = new GenerateView();
+        $route = $this->routeList[$this->route];
+        $controller = new $route['controller'];
 
-            // Check if user has access to this route
-            if (in_array('admin', $route['access']) && !$auth->isAdmin()) {
-                return header('location: /');
-            }
+        // Check if user has access to this route
+        if (in_array('admin', $route['access']) && !$this->auth->isAdmin()) {
+            return header('location: /');
+        }
 
-            if (in_array('user', $route['access']) && !$user->isLoggedIn()) {
-                return header('location: /');
-            }
+        if (!in_array('guest', $route['access']) && !$this->auth->isLoggedIn()) {
+            return header('location: /');
+        }
 
-            // Map our post method to this route
-            if ($_POST) {
-                $postMethod = $route['postMethod'];
-                $post = $controller->{$postMethod}(new Request);
-            }
+        // Map our POST method to this route
+        if ($_POST) {
+            $postMethod = $route['postMethod'];
+            $post = $controller->{$postMethod}(new Request);
+        }
 
-            // Display our navigation bar depending on user access
-            if ($user->isLoggedIn() && $auth->isAdmin()) {
-                $view->render('/AdminNavBar')->now();
+        // Define specific methods on GET
+        if (isset($route['getMethod'])) {
+            $getMethod = $route['getMethod'];
+            $get = $controller->{$getMethod}(new Request);
+        }
 
-                return $view->render(...$route['render'])->now();
-            }
+        // Display our navigation bar depending on user access
+        if ($this->auth->isLoggedIn() && $this->auth->isAdmin()) {
+            $view->render('/AdminNavBar')->now();
 
-            if ($user->isLoggedIn()) {
-                $view->render('/UserNavBar')->now();
+            return $view->render(...$route['render'])->now();
+        }
 
-                return $view->render(...$route['render'])->now();
-            }
+        if ($this->auth->isLoggedIn()) {
+            $view->render('/UserNavBar')->now();
 
-            if (!$user->isLoggedIn()) {
-                $view->render('/GuestNavBar')->now();
+            return $view->render(...$route['render'])->now();
+        }
 
-                return $view->render(...$route['render'])->now();
-            }
+        if (!$this->auth->isLoggedIn()) {
+            $view->render('/GuestNavBar')->now();
+
+            return $view->render(...$route['render'])->now();
         }
     }
 
@@ -79,35 +75,31 @@ class Routes
         return [
             '/' => [
                     'controller' => 'UserControlSkeleton\Controllers\AuthController',
-                    'constructs' => [$this->user],
                     'postMethod' => 'login',
                     'render' => [$this->route],
                     'access' => ['guest', 'user'],
                 ],
             '/Register' => [
                     'controller' => 'UserControlSkeleton\Controllers\UserController',
-                    'constructs' => [$this->user],
                     'postMethod' => 'create',
                     'render' => [$this->route],
                     'access' => ['guest', 'user'],
                 ],
             '/Account' => [
                     'controller' => 'UserControlSkeleton\Controllers\UserController',
-                    'constructs' => [$this->user],
                     'postMethod' => 'update',
                     'render' => [$this->route, $this->user->getInfo()],
-                    'access' => ['user', 'admin'],
+                    'access' => ['user'],
                 ],
             '/Logout'=> [
                     'controller' => 'UserControlSkeleton\Controllers\AuthController',
-                    'constructs' => [$this->user],
                     'postMethod' => '',
+                    'getMethod' => 'logout',
                     'render' => [$this->route],
-                    'access' => ['user', 'admin'],
+                    'access' => ['user'],
                 ],
             '/controlPanel' => [
                     'controller' => 'UserControlSkeleton\Controllers\AdminController',
-                    'constructs' => [$this->adapter, $this->user],
                     'postMethod' => "searchUsers",
                     'render' => [$this->route, 'UserTable'],
                     'access' => ['admin'],

@@ -4,19 +4,17 @@ namespace UserControlSkeleton\Controllers;
 
 use UserControlSkeleton\Request;
 use UserControlSkeleton\Models\User\User;
-use UserControlSkeleton\Interfaces\AdapterInterface;
-use UserControlSkeleton\Models\Database\MysqlAdapter;
+use UserControlSkeleton\Controllers\DatabaseController;
 
-class AdminController
+class AdminController extends DatabaseController
 {
-    protected $adapter;
-
     protected $user;
 
-    public function __construct(AdapterInterface $adapter, User $user)
+    public function __construct()
     {
-        $this->adapter = $adapter;
-        $this->user = $user;
+        parent::__construct();
+
+        $this->user = new User($this->adapter);
     }
 
     public function getColumns()

@@ -6,15 +6,17 @@ use UserControlSkeleton\Request;
 use UserControlSkeleton\Models\User\User;
 use UserControlSkeleton\Models\GenerateView;
 use UserControlSkeleton\Controllers\AuthController;
-use UserControlSkeleton\Models\Database\MysqlAdapter;
+use UserControlSkeleton\Controllers\DatabaseController;
 
-class UserController
+class UserController extends DatabaseController
 {
     protected $user;
 
-    public function __construct(User $user)
+    public function __construct()
     {
-        $this->user = $user;
+        parent::__construct();
+
+        $this->user = new User($this->adapter);
     }
 
     public function create(Request $request)
@@ -39,7 +41,7 @@ class UserController
             return;
         }
 
-        (new AuthController($this->user))->login($request);
+        (new AuthController)->login($request);
     }
 
     public function update(Request $request)
@@ -71,14 +73,8 @@ class UserController
         return;
     }
 
-    public function isLoggedIn()
+    public function getInfo()
     {
-        if (!isset($_SESSION['logged_in']) || !isset($_SESSION['username'])) {
-            unset($_SESSION['logged_in']);
-
-            return;
-        }
-
-        return true;
+        return $this->user->getInfo();
     }
 }
