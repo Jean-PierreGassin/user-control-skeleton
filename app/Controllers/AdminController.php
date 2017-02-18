@@ -2,6 +2,7 @@
 
 namespace UserControlSkeleton\Controllers;
 
+use UserControlSkeleton\Request;
 use UserControlSkeleton\Models\User\User;
 use UserControlSkeleton\Interfaces\AdapterInterface;
 use UserControlSkeleton\Models\Database\MysqlAdapter;
@@ -23,11 +24,9 @@ class AdminController
         return $this->adapter->getColumns();
     }
 
-    public function searchUsers($search)
+    public function searchUsers(Request $request)
     {
-        if (!$this->user->isAdmin()) {
-            return;
-        }
+        $search = $request->get('search_field');
 
         return $this->user->search($search);
     }

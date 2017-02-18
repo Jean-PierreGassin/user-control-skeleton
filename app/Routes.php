@@ -17,68 +17,101 @@ class Routes
 
     protected $adapter;
 
+    protected $routeList;
+
     public function __construct()
     {
         $this->adapter = new MysqlAdapter();
         $this->user = new User($this->adapter);
+
         $this->route = $_SERVER['REQUEST_URI'];
+        $this->routeList = $this->getRoutes();
     }
 
     public function switchView()
     {
-        if ($_POST && $this->route === '/') {
-            (new AuthController($this->user))->login(new Request);
-        }
+        if (in_array($this->route, array_keys($this->routeList))) {
+            $route = $this->routeList[$this->route];
 
-        if ($_POST && $this->route === '/Register') {
-            (new UserController($this->user))->create(new Request);
-        }
+            $view = new GenerateView();
+            $user = new UserController($this->user);
+            $auth = new AuthController($this->user);
+            $controller = new $route['controller'](...$route['constructs']);
 
-        if ($_POST && $this->route === '/Account') {
-            (new UserController($this->user))->update(new Request);
-        }
+            // Check if user has access to this route
+            if (in_array('admin', $route['access']) && !$auth->isAdmin()) {
+                return header('location: /');
+            }
 
-        if ($this->route === '/Logout') {
-            (new AuthController($this->user))->logout();
-        }
+            if (in_array('user', $route['access']) && !$user->isLoggedIn()) {
+                return header('location: /');
+            }
 
-        if ((new UserController($this->user))->isLoggedIn() && (new AuthController($this->user))->isAdmin()) {
-            (new GenerateView)->render('/AdminNavBar')->now();
-        }
+            // Map our post method to this route
+            if ($_POST) {
+                $postMethod = $route['postMethod'];
+                $post = $controller->{$postMethod}(new Request);
+            }
 
-        if ((new UserController($this->user))->isLoggedIn() && !(new AuthController($this->user))->isAdmin()) {
-            (new GenerateView)->render('/UserNavBar')->now();
-        }
+            // Display our navigation bar depending on user access
+            if ($user->isLoggedIn() && $auth->isAdmin()) {
+                $view->render('/AdminNavBar')->now();
 
-        if (!(new UserController($this->user))->isLoggedIn()) {
-            (new GenerateView)->render('/GuestNavBar')->now();
-        }
+                return $view->render(...$route['render'])->now();
+            }
 
-        if ($this->route === '/controlPanel' && (new AuthController($this->user))->isAdmin()) {
-            (new GenerateView)->render($this->route)->now();
-        }
+            if ($user->isLoggedIn()) {
+                $view->render('/UserNavBar')->now();
 
-        if ($this->route === '/controlPanel' && !(new AuthController($this->user))->isAdmin()) {
-            (new GenerateView)->render('error', 'You are not authorized.');
-        }
+                return $view->render(...$route['render'])->now();
+            }
 
-        if ($this->route === '/Account' && (new UserController($this->user))->isLoggedIn()) {
-            (new GenerateView)->render($this->route, $this->user->getInfo())->now();
-        }
+            if (!$user->isLoggedIn()) {
+                $view->render('/GuestNavBar')->now();
 
-        if ($this->route === '/Register' && !(new UserController($this->user))->isLoggedIn()) {
-            (new GenerateView)->render($this->route)->now();
+                return $view->render(...$route['render'])->now();
+            }
         }
+    }
 
-        if ($this->route === '/') {
-            (new GenerateView)->render($this->route)->now();
-        }
-
-        if ($_POST && $this->route === '/controlPanel') {
-            (new GenerateView)
-            ->render('UserTable', (new AdminController($this->adapter, $this->user))
-            ->searchUsers($_POST['search_field']))
-            ->now();
-        }
+    public function getRoutes()
+    {
+        return [
+            '/' => [
+                    'controller' => 'UserControlSkeleton\Controllers\AuthController',
+                    'constructs' => [$this->user],
+                    'postMethod' => 'login',
+                    'render' => [$this->route],
+                    'access' => ['guest', 'user'],
+                ],
+            '/Register' => [
+                    'controller' => 'UserControlSkeleton\Controllers\UserController',
+                    'constructs' => [$this->user],
+                    'postMethod' => 'create',
+                    'render' => [$this->route],
+                    'access' => ['guest', 'user'],
+                ],
+            '/Account' => [
+                    'controller' => 'UserControlSkeleton\Controllers\UserController',
+                    'constructs' => [$this->user],
+                    'postMethod' => 'update',
+                    'render' => [$this->route, $this->user->getInfo()],
+                    'access' => ['user', 'admin'],
+                ],
+            '/Logout'=> [
+                    'controller' => 'UserControlSkeleton\Controllers\AuthController',
+                    'constructs' => [$this->user],
+                    'postMethod' => '',
+                    'render' => [$this->route],
+                    'access' => ['user', 'admin'],
+                ],
+            '/controlPanel' => [
+                    'controller' => 'UserControlSkeleton\Controllers\AdminController',
+                    'constructs' => [$this->adapter, $this->user],
+                    'postMethod' => "searchUsers",
+                    'render' => [$this->route, 'UserTable'],
+                    'access' => ['admin'],
+                ],
+        ];
     }
 }
