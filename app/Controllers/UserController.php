@@ -35,11 +35,13 @@ class UserController extends DatabaseController
             return;
         }
 
-        if (!$this->user->create($request)) {
+        if ($this->user->exists($request)) {
             (new GenerateView)->render('error', 'Username already exists');
 
             return;
         }
+
+        $this->user->create($request);
 
         (new AuthController)->login($request);
     }
