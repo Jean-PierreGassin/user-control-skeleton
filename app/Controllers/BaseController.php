@@ -24,7 +24,7 @@ class BaseController
 
     public function config($type = null)
     {
-        $config = require_once '../config/app.php';
+        $config = require __DIR__."/../config/app.php";
 
         return $config[$type];
     }
