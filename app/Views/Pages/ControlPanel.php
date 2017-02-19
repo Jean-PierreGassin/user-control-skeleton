@@ -10,7 +10,7 @@
 	</div>
 </div>
 
-<?php if (isset($message)): ?>
+<?php if (isset($message) && count($message) > 0): ?>
 <div class="row align-center">
 	<div class="small-12 columns">
 		<table class="hover stack" style="table-layout: fixed;">
