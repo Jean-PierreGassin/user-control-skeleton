@@ -32,7 +32,14 @@ class MysqlAdapter implements AdapterInterface
     public function connect()
     {
         try {
-            $link = new PDO($this->driver.':host='.$this->host.';port='.$this->port.';dbname='.$this->name.';charset=UTF8;', $this->user, $this->pass);
+            $link = new PDO(
+                $this->driver.':host='.$this->host.';
+                port='.$this->port.';
+                dbname='.$this->name.';
+                charset=UTF8;',
+                $this->user,
+                $this->pass
+            );
 
             return $link;
         } catch (\PDOException $e) {
