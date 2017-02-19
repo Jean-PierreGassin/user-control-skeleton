@@ -43,8 +43,15 @@ class MysqlAdapter implements AdapterInterface
 
     public function getColumns()
     {
+        $databaseName = getenv('DATABASE_NAME');
+
         $statement = $this->connect();
-        $statement = $statement->prepare('SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = "user_control_skeleton" AND TABLE_NAME = "users"');
+        $statement = $statement->prepare('
+            SELECT COLUMN_NAME
+            FROM INFORMATION_SCHEMA.COLUMNS
+            WHERE TABLE_SCHEMA = "$databaseName"
+            AND TABLE_NAME = "users"
+        ');
 
         $statement->execute();
         $statement->fetch(PDO::FETCH_ASSOC);
