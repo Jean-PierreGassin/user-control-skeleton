@@ -65,4 +65,105 @@ class MysqlAdapter implements AdapterInterface
 
         return $statement;
     }
+
+    public function select($columns, $table, $where = false, $operator = false, $value = false, $multiple = false)
+    {
+        if (is_array($columns)) {
+            $columns = implode(', ', $columns);
+        }
+
+        $queryString = "SELECT $columns FROM $table";
+
+        if ($where && $operator && $value) {
+            $queryString .= " WHERE $where $operator ?";
+        }
+
+        $statement = $this->connect();
+        $statement = $statement->prepare($queryString);
+
+        if ($value) {
+            $statement->execute([$value]);
+        } else {
+            $statement->execute();
+        }
+
+        if ($multiple) {
+            $results = [];
+
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                $results[] = $row;
+            }
+
+            return $results;
+        }
+
+        return $statement->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function insert($table, $columns)
+    {
+        $queryString = "INSERT INTO $table";
+
+        foreach ($columns as $key => $value) {
+            $columnNames[] = $key;
+
+            if (count($columnNames) > 1) {
+                $queryString .= ", $key";
+
+                continue;
+            }
+
+            $queryString .= " ($key";
+        }
+
+        $queryString .= ")";
+
+        foreach ($columns as $key => $value) {
+            $columnValues[] = $value;
+
+            if (count($columnValues) > 1) {
+                $queryString .= ", ?";
+
+                continue;
+            }
+
+            $queryString .= " VALUES (?";
+        }
+
+        $queryString .= ")";
+
+        $statement = $this->connect();
+        $statement = $statement->prepare($queryString);
+
+        $statement->execute($columnValues);
+    }
+
+    public function update($table, $columns, $where = false, $operator = false, $value = false)
+    {
+        $bindings = [];
+
+        $queryString = "UPDATE $table";
+
+        foreach ($columns as $key => $value) {
+            $bindings[] = $value;
+
+            if (count($bindings) > 1) {
+                $queryString .= ", $key = ?";
+
+                continue;
+            }
+
+            $queryString .= " SET $key = ?";
+        }
+
+        if ($where && $operator && $value) {
+            $queryString .= " WHERE $where $operator ?";
+            $bindings[] = $value;
+        }
+
+        $statement = $this->connect();
+        $statement = $statement->prepare($queryString);
+
+        $statement->execute($bindings);
+    }
 }
