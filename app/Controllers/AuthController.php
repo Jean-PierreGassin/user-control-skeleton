@@ -22,7 +22,7 @@ class AuthController extends DatabaseController
     {
         $row = $this->user->isAdmin();
 
-        if ($row['user_group'] != 2) {
+        if ((int) $row['user_group'] !== 2) {
             return;
         }
 
