@@ -2,7 +2,9 @@
 
 namespace UserControlSkeleton\Models;
 
-class GenerateView
+use UserControlSkeleton\Controllers\BaseController;
+
+class GenerateView extends BaseController
 {
     protected $view;
 
@@ -10,72 +12,55 @@ class GenerateView
 
     public function render($view, $message = null)
     {
-        switch($view) {
-            case('/'):
-            $this->view = '../app/Views/Pages/Home.php';
+        include_once '../app/Views/Header.php';
 
-            return $this;
+        $this->getNavigationBar();
 
-            case('/UserNavBar'):
-            $this->view = '../app/Views/Navigation/UserNavBar.php';
+        switch ($view) {
+            case ('/'):
+                include_once '../app/Views/Pages/Home.php';
+                break;
 
-            return $this;
+            case ('/Register'):
+                include_once '../app/Views/Pages/Register.php';
+                break;
 
-            case('/GuestNavBar'):
-            $this->view = '../app/Views/Navigation/GuestNavBar.php';
+            case ('/controlPanel'):
+                include_once '../app/Views/Pages/ControlPanel.php';
+                break;
 
-            return $this;
+            case ('/Account'):
+                include_once '../app/Views/Pages/Account.php';
+                $this->message = $message;
+                break;
 
-            case('/AdminNavBar'):
-            $this->view = '../app/Views/Navigation/AdminNavBar.php';
+            case ('error'):
+                $_SESSION['error'] = $message;
+                break;
 
-            return $this;
-
-            case('/Register'):
-            $this->view = '../app/Views/Pages/Register.php';
-
-            return $this;
-
-            case('/controlPanel'):
-            $this->view = '../app/Views/Pages/ControlPanel.php';
-
-            return $this;
-
-            case('/Account'):
-            $this->view = '../app/Views/Pages/Account.php';
-            $this->message = $message;
-
-            return $this;
-
-            case('UserTable'):
-            $this->view = '../app/Views/Admin/UserTable.php';
-            $this->message = $message;
-
-            return $this;
-
-            case('error'):
-            $_SESSION['error'] = $message;
-
-            return;
-
-            case('success'):
-            $_SESSION['success'] = $message;
-
-            return;
+            case ('success'):
+                $_SESSION['success'] = $message;
+                break;
 
             default:
-            $this->view = '../app/Views/Pages/Home.php';
-
-            return $this;
+                include_once '../app/Views/Pages/Home.php';
         }
+
+        include_once '../app/Views/Footer.php';
     }
 
-    public function now()
+    protected function getNavigationBar()
     {
-        $message = $this->message;
+        if ($this->auth->isLoggedIn() && $this->auth->isAdmin()) {
+            return include_once '../app/Views/Navigation/AdminNavBar.php';
+        }
 
-        include_once '../app/Views/Header.php';
-        include_once $this->view;
-        include_once '../app/Views/Footer.php';
+        if ($this->auth->isLoggedIn()) {
+            return include_once '../app/Views/Navigation/UserNavBar.php';
+        }
+
+        if (!$this->auth->isLoggedIn()) {
+            return include_once '../app/Views/Navigation/GuestNavBar.php';
+        }
     }
 }

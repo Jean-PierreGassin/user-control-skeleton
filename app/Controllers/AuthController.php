@@ -52,7 +52,7 @@ class AuthController extends DatabaseController
         $_SESSION['logged_in'] = true;
         $_SESSION['username'] = $username;
 
-        header("Location: ../Account");
+        header('location: /Account');
     }
 
     public function isLoggedIn()
@@ -72,6 +72,6 @@ class AuthController extends DatabaseController
         unset($_SESSION['username']);
 
         session_destroy();
-        header("Location: ../");
+        header('location: /');
     }
 }

@@ -8,13 +8,24 @@ use UserControlSkeleton\Controllers\AdminController;
 
 class BaseController
 {
+    protected $app;
+
     protected $user;
 
     protected $auth;
 
-    protected function __construct()
+    public function __construct()
     {
+        $this->app = $this;
+
         $this->user = new UserController();
         $this->auth = new AuthController();
+    }
+
+    public function config($type = null)
+    {
+        $config = require_once '../config/app.php';
+
+        return $config[$type];
     }
 }

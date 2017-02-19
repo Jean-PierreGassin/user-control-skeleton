@@ -4,6 +4,7 @@ namespace UserControlSkeleton\Controllers;
 
 use UserControlSkeleton\Request;
 use UserControlSkeleton\Models\User\User;
+use UserControlSkeleton\Models\GenerateView;
 use UserControlSkeleton\Controllers\DatabaseController;
 
 class AdminController extends DatabaseController
